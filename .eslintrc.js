@@ -9,11 +9,7 @@ module.exports = {
     },
   },
   extends: [
-    'eslint:recommended',
-    'plugin:react/recommended',
-    'plugin:@typescript-eslint/recommended',
-    'plugin:react-hooks-recommended',
-    'puglin:prettier/recommended',
+    "extend:@rocketseat/eslint-config/react",
   ],
   overrides: [],
   parser: '@typescript-eslint/parser',

@@ -13,3 +13,4 @@ export const ButtonPage = styled.button<Props>`
  border-radius: 3px;
  margin: 10px 0 0 2px;
 `
+

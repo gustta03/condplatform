@@ -17,6 +17,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 
 import * as yup from "yup";
 import { toasts } from "../../utils/toast";
+import { Pagination } from "../../components/page";
 
 interface TypeReservations {
   id: number;
@@ -62,15 +63,14 @@ export const Reservas = () => {
   const [loading, setLoading] = useState(false);
 
   const [addOrEdit, setAddOrEdit] = useState(false);
+  
+  let PageSize = 6
 
-  const [itemsPerPage, setItemsPerPage] = useState(5);
-  const [currentPage, setCurrentpage] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
 
-  const page = Math.ceil(dataReservation.length / itemsPerPage);
-  const startIndex = currentPage * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-
-  const currentItems = dataReservation.slice(startIndex, endIndex);
+    const firstPageIndex = (currentPage - 1) * PageSize;
+    const lastPageIndex = firstPageIndex + PageSize;
+    const currentItems = dataReservation.slice(firstPageIndex, lastPageIndex);
 
   const schema = yup.object().shape({
     id_unit: yup.string().required("A unidade é obrigatoria"),
@@ -310,11 +310,12 @@ export const Reservas = () => {
           </ModalEdit>
         </AreaTable>
 
-        <Pagenate
-          pages={page}
-          currentPage={currentPage}
-          setCurrentpages={setCurrentpage}
-        />
+        <Pagination
+         currentPage={currentPage}
+         totalCount={dataReservation.length}
+         pageSize={PageSize}
+         onPageChange={(page: any) => setCurrentPage(page)}
+      />
       </Theme>
     </Root>
   );

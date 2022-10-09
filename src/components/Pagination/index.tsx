@@ -1,19 +1,14 @@
-import React, { Dispatch, SetStateAction, useState } from "react";
-import { TypeDataDocs } from '../../pages/Documentos/index'
-import { ButtonPage } from "./styles";
+import { Dispatch, SetStateAction, useState } from 'react';
+
+import { ButtonPage } from './styles';
 
 interface Items {
   pages: number;
-  currentPage: any
-  setCurrentpages: Dispatch<SetStateAction<number>>
+  currentPage: number;
+  setCurrentpages: Dispatch<SetStateAction<number>>;
 }
 
- export const Pagenate = ({ pages, setCurrentpages, currentPage }: Items) => {
- 
-
-//   const page = Math.ceil(items.length / itemsPerPage);
-//   const startIndex = currentPage * itemsPerPage;
-//   const endIndex = startIndex + itemsPerPage;
+export const Pagenate = ({ pages, setCurrentpages, currentPage }: Items) => {
 
   return (
     <div>

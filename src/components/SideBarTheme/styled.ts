@@ -77,7 +77,6 @@ export const DashboardList = styled.div`
 export const ThemeMain = styled.div`
   display: flex;
 
-
 `;
 export const Header = styled.div`
   width: 100%;
@@ -156,4 +155,8 @@ export const Body = styled.div`
   height: 450px;
   width: 95%;
   margin: 50px auto;
+
+  span {
+    background-color: #fff;
+  }
 `;

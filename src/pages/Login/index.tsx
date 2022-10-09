@@ -1,32 +1,30 @@
-import { useState, useCallback } from "react";
-import { Form, FormMain } from "./styled";
+import { useState, useCallback } from 'react';
+import { Form, FormMain } from './styled';
 
-import { api } from "../../services/api/api";
-import { signIn, } from "../../auth/auth";
-import { useNavigate } from "react-router-dom";
+import { api } from '../../services/api/api';
+import { signIn, TokenValidate } from '../../auth/auth';
+import { useNavigate } from 'react-router-dom';
 
 export const LoginApp = () => {
+  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('');
 
-  const [password, setPassword] = useState("");
-  const [email, setEmail] = useState("");
-  
   const navigate = useNavigate();
 
-  const signin = useCallback( async () => {
-    const response = await api.post("/auth/login",
-     { 
-      email,
-      password 
-    });
-
-    const data = response.data;
-
-    if (data.error === "") {
-      signIn(data.token);
-      navigate("/");
-    }
-
-  }, [email, password])
+  const signin = useCallback(async () => {
+    await api
+      .post('/auth/login', {
+        email,
+        password,
+      })
+      .then(res => {
+        if (res.data.error === '') {
+          signIn(res.data.token);
+          TokenValidate();
+          navigate('/');
+        }
+      });
+  }, [email, password]);
 
   return (
     <FormMain>
@@ -36,14 +34,14 @@ export const LoginApp = () => {
           <form>
             <input
               placeholder="Digite seu email"
-              type={"email"}
-              onChange={(e) => setEmail(e.target.value)}
+              type={'email'}
+              onChange={e => setEmail(e.target.value)}
               required
             />
             <input
               placeholder="Digite sua senha"
-              type={"password"}
-              onChange={(e) => setPassword(e.target.value)}
+              type={'password'}
+              onChange={e => setPassword(e.target.value)}
               required
             />
           </form>

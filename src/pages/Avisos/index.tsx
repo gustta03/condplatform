@@ -16,7 +16,6 @@ import { Root, Trigger } from '@radix-ui/react-dialog';
 
 import { CheckModalTrueOrFalse, IsOpen } from '../../helpers/CheckStateModal';
 
-
 import { yupResolver } from '@hookform/resolvers/yup';
 
 import { toasts } from '../../utils/toast';
@@ -24,6 +23,7 @@ import { toasts } from '../../utils/toast';
 import { Pagenate } from '../../components/Pagination';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { ButtonsArea } from '../Documentos/styles';
+import { Pagination } from '../../components/page';
 
 export interface TypeData {
   body: string;
@@ -51,14 +51,13 @@ export const Avisos = () => {
   const [body, setInputBody] = useState('');
   const [StateModal, setStateModal] = useState(false);
 
-  const [itemsPerPage, setItemsPerPage] = useState(6);
-  const [currentPage, setCurrentpage] = useState(0);
+  let PageSize = 6
 
-  const page = Math.ceil(data.length / itemsPerPage);
-  const startIndex = currentPage * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
+  const [currentPage, setCurrentPage] = useState(1);
 
-  const currentItems = data.slice(startIndex, endIndex);
+    const firstPageIndex = (currentPage - 1) * PageSize;
+    const lastPageIndex = firstPageIndex + PageSize;
+    const currentItems = data.slice(firstPageIndex, lastPageIndex);
 
   const [AddOrEdit, setAddOrEdit] = useState(false);
 
@@ -67,12 +66,7 @@ export const Avisos = () => {
     body: yup.string().required('o corpo do aviso é obrigatorio'),
   });
 
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors },
-  } = useForm<Input>({
+  const { register, handleSubmit, reset, formState: { errors } } = useForm<Input>({
     resolver: yupResolver(schema),
   });
 
@@ -253,11 +247,12 @@ export const Avisos = () => {
           </AreaTable>
         )}
 
-        <Pagenate
-          pages={page}
-          currentPage={currentPage}
-          setCurrentpages={setCurrentpage}
-        />
+       <Pagination
+        currentPage={currentPage}
+        totalCount={data.length}
+        pageSize={PageSize}
+        onPageChange={(page: any) => setCurrentPage(page)}
+      />
 
         {data.length <= 0 && (
           <EmptyAlert>

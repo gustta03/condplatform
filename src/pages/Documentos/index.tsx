@@ -27,6 +27,7 @@ import { EmptyAlertIcon } from '../../components/EmptyAlert';
 import { Pagenate } from '../../components/Pagination';
 
 import { toasts } from '../../utils/toast';
+import { Pagination } from '../../components/page';
 
 export interface TypeDataDocs {
   fileurl: string;
@@ -59,18 +60,17 @@ export const Documentos = () => {
   const [File, setFile] = useState<FileList | null>();
   const [StateModal, setStateModal] = useState(false);
 
-  const [itemsPerPage, setItemsPerPage] = useState(6);
-  const [currentPage, setCurrentpage] = useState(0);
+  let PageSize = 6
 
-  const page = Math.ceil(dataDocs.length / itemsPerPage);
-  const startIndex = currentPage * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
+  const [currentPage, setCurrentPage] = useState(2);
 
-  const currentItems = dataDocs.slice(startIndex, endIndex);
+    const firstPageIndex = (currentPage - 1) * PageSize;
+    const lastPageIndex = firstPageIndex + PageSize;
+    const currentItems = dataDocs.slice(firstPageIndex, lastPageIndex);
 
   const schema = yup.object().shape({
     title: yup.string().required('O nome do documento é obrigatorio'),
-    file: yup.mixed().test('required', 'O arqivo é obrigatorio', _file => {
+    file: yup.mixed().test('required', 'O arquivo é obrigatorio', _file => {
       if (_file.length >= 1) {
         return true;
       }
@@ -321,13 +321,19 @@ export const Documentos = () => {
             </form>
           )}
         </ModalEdit>
-        <Pagenate
-          pages={page}
-          currentPage={currentPage}
-          setCurrentpages={setCurrentpage}
-        />
+         
+        <Pagination
+        currentPage={currentPage}
+        totalCount={dataDocs.length}
+        pageSize={PageSize}
+        onPageChange={(page: any) => setCurrentPage(page)}
+      />
+     
         {dataDocs.length <= 0 && <EmptyAlertIcon type="documentos" />}
+
+       
       </Theme>
+    
     </Root>
   );
 };

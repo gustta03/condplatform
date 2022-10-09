@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { AreaTable } from '../../components/TableArea';
 import { Buttons } from '../../components/Buttons';
 import { ModalEdit } from '../../components/Modal';
@@ -11,6 +11,7 @@ import { Root } from '@radix-ui/react-dialog';
 import { Pagenate } from '../../components/Pagination';
 import { Check } from 'phosphor-react';
 import { isTemplateMiddle } from 'typescript';
+import { Pagination } from '../../components/page';
 
 interface WarningTypes {
   title: string;
@@ -30,25 +31,17 @@ export const Ocorrencias = () => {
 
   const [currentImageIndex, setCurrentIndex] = useState<any>();
 
-  const token: any = localStorage.getItem('@user:admin');
+  const token: string | null = localStorage.getItem('@user:admin');
 
-  const [itemsPerPage, setItemsPerPage] = useState(8);
-  const [currentPage, setCurrentpage] = useState(0);
 
-  const page = Math.ceil(warningData.length / itemsPerPage);
-  const startIndex = currentPage * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
+  let PageSize = 8
 
-  const currentItems = warningData.slice(startIndex, endIndex);
+  const [currentPage, setCurrentPage] = useState(1);
 
-  const gotoPrevious = () => {
-    currentImageIndex > 0 && setCurrentIndex(currentImageIndex - 1);
-  };
+    const firstPageIndex = (currentPage - 1) * PageSize;
+    const lastPageIndex = firstPageIndex + PageSize;
+    const currentItems = warningData.slice(firstPageIndex, lastPageIndex);
 
-  const gotoNext = () => {
-    currentImageIndex + 1 < modalPhotos.length &&
-      setCurrentIndex(currentImageIndex + 1);
-  };
 
   const getOcoreencias = async () => {
     await api
@@ -83,7 +76,7 @@ export const Ocorrencias = () => {
               <div>
                 <Checked
                   type={'checkbox'}
-                  checked={item.status === 'RESOLVED' ? true : false}
+                  checked={item.status === 'RESOLVED'}
                 />
                 <Unit>{item.name_unit}</Unit>
                 <p>{item.title}</p>
@@ -96,11 +89,13 @@ export const Ocorrencias = () => {
           })}
         </AreaTable>
 
-        <Pagenate
-          pages={page}
-          currentPage={currentPage}
-          setCurrentpages={setCurrentpage}
-        />
+
+       <Pagination
+        currentPage={currentPage}
+        totalCount={warningData.length}
+        pageSize={PageSize}
+        onPageChange={(page: any) => setCurrentPage(page)}
+      />
       </Theme>
     </Root>
   );
