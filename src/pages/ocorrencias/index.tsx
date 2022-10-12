@@ -32,7 +32,7 @@ export const Ocorrencias = () => {
   const token: string | null = localStorage.getItem('@user:admin');
 
 
-  let PageSize = 8
+  let PageSize = 7
 
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -80,25 +80,7 @@ export const Ocorrencias = () => {
                 <p>{item.title}</p>
                 <Date>{item.datecreated_formatted}</Date>
                 <Photo onClick={() => setModalPhotos(item.photos)}>
-                <Gallery>
-                  <div>
-                    <Item
-                      width="160"
-                      height="160"
-                      alt="Photo of seashore by Folkert Gorter"
-                    >
-                     {({ ref, open }) => (
-                       <img
-                         style={{ cursor: 'pointer' }}
-                         src="https://farm4.staticflickr.com/3894/15008518202_b016d7d289_m.jpg"
-                         ref={ref as React.MutableRefObject<HTMLImageElement>}
-                         onClick={open}
-                       />
-                     )}
-                    </Item>
-                     
-                  </div>
-                </Gallery>
+                  <div>{item.photos.length} foto</div>
                 </Photo>
               </div>
             );
