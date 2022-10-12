@@ -1,5 +1,4 @@
 import { useMemo } from 'react';
-import { number } from 'yup/lib/locale';
 
 interface Props {
   totalCount: number;

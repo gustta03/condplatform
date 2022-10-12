@@ -16,12 +16,6 @@ import { TableHead } from '../../components/TableHead';
 
 import { Button, ModalArea, ButtonsArea, Buttonc, Input } from './styles';
 
-import {
-  CheckModalTrueOrFalse,
-  IsOpen,
-  StateModalDefaltMainApp,
-} from '../../helpers/CheckStateModal';
-
 import { EmptyAlertIcon } from '../../components/EmptyAlert';
 
 import { Pagenate } from '../../components/Pagination';
@@ -62,11 +56,19 @@ export const Documentos = () => {
 
   let PageSize = 6
 
-  const [currentPage, setCurrentPage] = useState(2);
+  const [currentPage, setCurrentPage] = useState(1);
 
     const firstPageIndex = (currentPage - 1) * PageSize;
     const lastPageIndex = firstPageIndex + PageSize;
-    const currentItems = dataDocs.slice(firstPageIndex, lastPageIndex);
+
+    let currentItems = dataDocs.slice(firstPageIndex, lastPageIndex);
+
+   useEffect(() => {
+     currentItems = dataDocs.slice(firstPageIndex, lastPageIndex);
+     console.log(currentItems)
+   }, [dataDocs])
+    
+
 
   const schema = yup.object().shape({
     title: yup.string().required('O nome do documento é obrigatorio'),
@@ -79,11 +81,7 @@ export const Documentos = () => {
     }),
   });
 
-  const {
-    register,
-    reset,
-    handleSubmit,
-    formState: { errors },
+  const { register, reset, handleSubmit, formState: { errors },
   } = useForm<schemaType>({
     resolver: yupResolver(schema),
   });
@@ -135,11 +133,6 @@ export const Documentos = () => {
     getDocuments();
   };
 
-  const ChangeStateModalToMainApp = useCallback(() => {
-    StateModalDefaltMainApp(false);
-    setStateModal(false);
-  }, []);
-
   const handleAddDocument = useCallback(async () => {
     const formData = new FormData();
     formData.append('title', title);
@@ -167,9 +160,6 @@ export const Documentos = () => {
           toasts.errorNotification(res.error);
         }
       });
-
-    // CheckModalTrueOrFalse(error.error === "");
-    // setStateModal(IsOpen);
 
     getDocuments();
   }, [title, File]);
@@ -326,8 +316,8 @@ export const Documentos = () => {
         currentPage={currentPage}
         totalCount={dataDocs.length}
         pageSize={PageSize}
-        onPageChange={(page: any) => setCurrentPage(page)}
-      />
+        onPageChange={(page: number) => setCurrentPage(page)}
+        />
      
         {dataDocs.length <= 0 && <EmptyAlertIcon type="documentos" />}
 

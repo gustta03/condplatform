@@ -2,6 +2,7 @@ import { DOTS, usePagination } from '../../hooks/usePagination';
 
 import { ArrowRight, Container } from './styles';
 import { ButtonPage } from '../Pagination/styles';
+import { useEffect } from 'react';
 
 interface Props {
   currentPage: number;
@@ -42,7 +43,7 @@ export const Pagination: any = (props: Props) => {
 
   return (
     <Container>
-      <ArrowRight disp={currentPage === 1 ? true : false}  onClick={onPrevious}>{'<'}</ArrowRight>
+      <ArrowRight disp={currentPage === 1 ? true : false}  onClick={onPrevious}><ButtonPage>&lt;</ButtonPage></ArrowRight>
       {paginationRange.map((item: any) => {
         if (item === DOTS) {
           return <div>&#8230;</div>;

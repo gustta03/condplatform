@@ -14,7 +14,6 @@ import { TableHead } from '../../components/TableHead';
 import { FileArrowUp } from 'phosphor-react';
 import { Root, Trigger } from '@radix-ui/react-dialog';
 
-import { CheckModalTrueOrFalse, IsOpen } from '../../helpers/CheckStateModal';
 
 import { yupResolver } from '@hookform/resolvers/yup';
 
@@ -182,6 +181,11 @@ export const Avisos = () => {
                     {Modal?.title === 'Adicionar' && (
                       <button onClick={() => setAddOrEdit(true)}>
                         Adicionar
+                      </button>
+                    )}
+                    {Modal?.title !== 'Adicionar' && (
+                      <button onClick={() => setAddOrEdit(false)}>
+                        Editar
                       </button>
                     )}
                     <button onClick={() => setStateModal(false)}>

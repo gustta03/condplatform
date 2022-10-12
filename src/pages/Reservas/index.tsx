@@ -64,7 +64,7 @@ export const Reservas = () => {
 
   const [addOrEdit, setAddOrEdit] = useState(false);
   
-  let PageSize = 6
+  let PageSize = 5
 
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -141,6 +141,8 @@ export const Reservas = () => {
         if(res.data.error === '') {
           toasts.sucessNotification('Reserva salvo com sucesso')
           reset()
+        }else {
+          toasts.errorNotification(res.data.error)
         }
       });
 
@@ -314,8 +316,8 @@ export const Reservas = () => {
          currentPage={currentPage}
          totalCount={dataReservation.length}
          pageSize={PageSize}
-         onPageChange={(page: any) => setCurrentPage(page)}
-      />
+         onPageChange={(page: number) => setCurrentPage(page)}
+        /> 
       </Theme>
     </Root>
   );

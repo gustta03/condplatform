@@ -13,6 +13,7 @@ export const Content = styled.div`
   background-color: #fff;
 
   width: 100%;
+
   h5 {
     font-size: 16px;
     font-weight: 200;
@@ -93,7 +94,7 @@ export const Header = styled.div`
 
 export const HeaderContents = styled.div`
   width: 95%;
-  height: 80%;
+  height: 50%;
   margin: 6px auto;
   display: flex;
   align-items: center;
@@ -103,7 +104,7 @@ export const ProfileArea = styled.div``;
 
 export const SearchArea = styled.div`
   width: 250px;
-  /* height: 35px; */
+
 
   input {
     width: 171px;
@@ -152,7 +153,7 @@ export const PhotoUser = styled.div`
 `;
 
 export const Body = styled.div`
-  height: 450px;
+  height: 250px;
   width: 95%;
   margin: 50px auto;
 

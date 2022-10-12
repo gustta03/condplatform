@@ -24,12 +24,10 @@ import { AsideItem } from "../AsideBar";
 import { Link } from "react-router-dom";
 
 import { BellRinging, ChartLine, HouseSimple, User } from "phosphor-react";
-import { Notification } from 'phosphor-react'
-import { Root } from "@radix-ui/react-dialog";
+
 
 type Props = {
   children: ReactNode;
-  // IsOpen: boolean | undefined
 };
 
 export const Theme = ({ children }: Props) => {
@@ -74,9 +72,7 @@ export const Theme = ({ children }: Props) => {
           </ProfileArea>
         </HeaderContents>
         <Body>
-          {/* <Root open={IsOpen}> */}
           {children}
-          {/* </Root> */}
         </Body>
       </Header>
     </ThemeMain>

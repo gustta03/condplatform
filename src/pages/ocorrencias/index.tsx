@@ -8,10 +8,8 @@ import { api } from '../../services/api/api';
 import { Photo, Unit, Date, Checked } from './styles';
 import { Root } from '@radix-ui/react-dialog';
 
-import { Pagenate } from '../../components/Pagination';
-import { Check } from 'phosphor-react';
-import { isTemplateMiddle } from 'typescript';
 import { Pagination } from '../../components/page';
+import { Gallery, Item } from 'react-photoswipe-gallery';
 
 interface WarningTypes {
   title: string;
@@ -62,7 +60,7 @@ export const Ocorrencias = () => {
   useEffect(() => {
     getOcoreencias();
     onBeforeSlide();
-  }, [modalPhotos]);
+  }, []);
 
   return (
     <Root open={StateModal}>
@@ -73,7 +71,7 @@ export const Ocorrencias = () => {
 
           {currentItems.map((item, index) => {
             return (
-              <div>
+              <div id='index'>
                 <Checked
                   type={'checkbox'}
                   checked={item.status === 'RESOLVED'}
@@ -82,7 +80,25 @@ export const Ocorrencias = () => {
                 <p>{item.title}</p>
                 <Date>{item.datecreated_formatted}</Date>
                 <Photo onClick={() => setModalPhotos(item.photos)}>
-                  <div>{item.photos.length} fotos</div>
+                <Gallery>
+                  <div>
+                    <Item
+                      width="160"
+                      height="160"
+                      alt="Photo of seashore by Folkert Gorter"
+                    >
+                     {({ ref, open }) => (
+                       <img
+                         style={{ cursor: 'pointer' }}
+                         src="https://farm4.staticflickr.com/3894/15008518202_b016d7d289_m.jpg"
+                         ref={ref as React.MutableRefObject<HTMLImageElement>}
+                         onClick={open}
+                       />
+                     )}
+                    </Item>
+                     
+                  </div>
+                </Gallery>
                 </Photo>
               </div>
             );

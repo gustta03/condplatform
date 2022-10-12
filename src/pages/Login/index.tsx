@@ -21,7 +21,7 @@ export const LoginApp = () => {
         if (res.data.error === '') {
           signIn(res.data.token);
           TokenValidate();
-          navigate('/');
+          navigate('/dashboard');
         }
       });
   }, [email, password]);

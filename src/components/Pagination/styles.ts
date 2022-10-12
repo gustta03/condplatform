@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 interface Props { 
-    background: any
+    background?: boolean
 }
 
 export const ButtonPage = styled.button<Props>`
