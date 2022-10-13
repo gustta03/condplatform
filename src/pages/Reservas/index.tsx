@@ -7,10 +7,10 @@ import { TableHead } from "../../components/TableHead";
 import { api } from "../../services/api/api";
 import { Buttons } from "../../components/Buttons";
 import { Input, Error, LineHorizont, ModalArea, Select } from "./styles";
-import { Pagenate } from "../../components/Pagination";
+
 
 import { ModalEdit } from "../../components/Modal";
-// import { Input } from "../../components/Inputs/styles";
+
 import { useForm } from "react-hook-form";
 
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -89,25 +89,30 @@ export const Reservas = () => {
 
   const getReservations = async () => {
   
-    await api
-      .get("/reservations", {
-        params: { token },
-      })
-      .then((res) => res.data)
-      .then((res) => setReservation(res.list));
+    await api.get("/reservations", {
+        params: {
+           token 
+        },
+      }).then((res) => {
+        setReservation(res.data.list)
+      });
 
-    await api
-      .get("/areas", { params: { token } })
-      .then((res) => res.data)
-      .then((res) => setAreas(res.list));
+      await api.get("/areas", {
+        params: {
+          token 
+        },
+      }).then((res) => {
+         setReservation(res.data.list)
+      });
 
-    await api
-      .get("/units", {
-        params: { token },
-      })
-      .then((res) => res.data)
-      .then((res) => setUnity(res.list));
-  };
+      await api.get("/units", {
+        params: {
+           token 
+        },
+      }).then((res) => {
+        setReservation(res.data.list)
+      });
+    }
 
   const submitForm = (data: any) => {
     return addOrEdit ? createReservation(data) : editReservation(data);
@@ -188,14 +193,14 @@ export const Reservas = () => {
         </Close>
 
         <AreaTable>
-          <TableHead unit date="Data da reserva" actions area />
+          <TableHead date="Data da reserva" unit actions area />
 
           {currentItems.map((item: TypeReservations) => {
             return (
               <div key={item.id}>
                 <p>{item.name_unit}</p>
-                <p>{item.reservation_date_formatted}</p>
                 <p>{item.name_area}</p>
+                <p>{item.reservation_date_formatted}</p>
                 <p>
                   <b
                     onClick={() => {
@@ -321,4 +326,5 @@ export const Reservas = () => {
       </Theme>
     </Root>
   );
-};
+}
+

@@ -9,7 +9,7 @@ export const Photo = styled.div`
     text-align: center;
     background-color: #4FC774;
     color: #fff;
-    width: 30px;
+    width: 40px;
     border-radius: 5px;
     cursor: pointer;
     padding: 0 20px;
@@ -40,8 +40,5 @@ export const Date = styled.p`
 `
 
 export const Checked = styled.input `
-  width: 15px;
-  height: 15px;
-  background-color: aliceblue;
   cursor: pointer;
 `

@@ -6,6 +6,7 @@ import { LoginApp } from '../pages/Login';
 import { NotFound } from '../pages/NotFound';
 import { Reservas } from '../pages/Reservas';
 import { Ocorrencias } from '../pages/ocorrencias';
+import { Achados } from '../pages/Achados';
 
 function Rotas() {
   return (
@@ -17,6 +18,7 @@ function Rotas() {
       <Route path="/documento" element={<Documentos />} />
       <Route path="/reservas" element={<Reservas />} />
       <Route path="/ocorrencias" element={<Ocorrencias />} />
+      <Route path="/achados" element={<Achados />} />
     </Routes>
   );
 }

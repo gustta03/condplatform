@@ -18,7 +18,7 @@ import { Button, ModalArea, ButtonsArea, Buttonc, Input } from './styles';
 
 import { EmptyAlertIcon } from '../../components/EmptyAlert';
 
-import { Pagenate } from '../../components/Pagination';
+
 
 import { toasts } from '../../utils/toast';
 import { Pagination } from '../../components/page';
@@ -28,6 +28,7 @@ export interface TypeDataDocs {
   id: number;
   title: string;
 }
+
 interface TypeModalInfos {
   title: string;
   id: number;
@@ -113,6 +114,7 @@ export const Documentos = () => {
     }
 
     formData.append('token', token);
+    
     const config = {
       headers: {
         'Content-Type': 'multipart/form-data; charset=utf-8;',

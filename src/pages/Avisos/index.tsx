@@ -19,7 +19,6 @@ import { yupResolver } from '@hookform/resolvers/yup';
 
 import { toasts } from '../../utils/toast';
 
-import { Pagenate } from '../../components/Pagination';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { ButtonsArea } from '../Documentos/styles';
 import { Pagination } from '../../components/page';

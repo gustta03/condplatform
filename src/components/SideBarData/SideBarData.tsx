@@ -26,7 +26,7 @@ export const SideBarData = [
   {
     title: "Achados e perdidos",
     icon: <Icon.Binoculars size={24} />,
-    link: "achados",
+    link: "/achados",
   },
   {
     type: "Dados",

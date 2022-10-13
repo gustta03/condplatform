@@ -1,8 +1,7 @@
 import { DOTS, usePagination } from '../../hooks/usePagination';
 
-import { ArrowRight, Container } from './styles';
-import { ButtonPage } from '../Pagination/styles';
-import { useEffect } from 'react';
+import { ArrowRight, Container, ButtonPage } from './styles';
+
 
 interface Props {
   currentPage: number;

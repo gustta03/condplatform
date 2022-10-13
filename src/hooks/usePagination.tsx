@@ -6,7 +6,7 @@ interface Props {
   siblingCount: number;
   currentPage: number;
 }
-
+ 
 export const DOTS = '...';
 
 const range = (start: number, end: number) => {
