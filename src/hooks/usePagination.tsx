@@ -1,10 +1,12 @@
 import { useMemo } from 'react';
+import { number } from 'yup/lib/locale';
 
 interface Props {
   totalCount: number;
   pageSize: number;
   siblingCount: number;
   currentPage: number;
+  paginationRange?: string | number[] | undefined
 }
  
 export const DOTS = '...';

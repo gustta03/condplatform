@@ -16,12 +16,12 @@ import { TableHead } from '../../components/TableHead';
 
 import { Button, ModalArea, ButtonsArea, Buttonc, Input } from './styles';
 
-import { EmptyAlertIcon } from '../../components/EmptyAlert';
+import { EmptyAlertIcon } from '../../components/EmptyCard';
 
 
 
 import { toasts } from '../../utils/toast';
-import { Pagination } from '../../components/page';
+import { Pagination } from '../../components/Pagenation';
 
 export interface TypeDataDocs {
   fileurl: string;

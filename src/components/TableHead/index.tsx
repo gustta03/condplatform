@@ -10,10 +10,13 @@ interface Props {
   unit?: boolean;
   actions?: boolean;
   local?: boolean;
-  desc?: boolean
+  desc?: boolean;
+  name?: boolean;
+  email?: boolean;
+  cpf?: boolean;
 }
 
-export const TableHead = ({ date, area, photos, resolvidos, unit, actions, title, local, desc }: Props) => {
+export const TableHead = ({ date, area, photos, resolvidos, unit, actions, title, local, desc, name, email, cpf }: Props) => {
   return (
     <TableHeader>
       {resolvidos ? <p>{resolvidos}</p> : null}
@@ -24,6 +27,9 @@ export const TableHead = ({ date, area, photos, resolvidos, unit, actions, title
       {area ? <p>Àrea</p> : null}
       {date ? <p>{date}</p> : null}
       {photos ? <p>Fotos</p> : null}
+      {name ? <p>Nome</p> : null}
+      {cpf ? <p>CPF</p> : null}
+      {email ? <p>Email</p> : null}
       {actions ? <p>Ações</p> : null}
     </TableHeader>
   );

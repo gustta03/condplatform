@@ -17,7 +17,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 
 import * as yup from "yup";
 import { toasts } from "../../utils/toast";
-import { Pagination } from "../../components/page";
+import { Pagination } from "../../components/Pagenation";
 
 interface TypeReservations {
   id: number;
@@ -45,6 +45,7 @@ interface dataSelect {
 interface Inputs {
   id_unit: string;
   id_area: string;
+  id: number;
   reservation_date: string;
 }
 
@@ -55,7 +56,7 @@ export const Reservas = () => {
   const [dataReservation, setReservation] = useState<TypeReservations[]>([]);
   const [modalInfo, setModalInfo] = useState<ModalInfo>();
   const [areas, setAreas] = useState<dataSelect[]>([]);
-  const [unity, setUnity] = useState<dataSelect[]>([]);
+  const [unity, setUnit] = useState<dataSelect[]>([]);
 
 
   const [modalAreaId, setModalAreaId] = useState("");
@@ -90,28 +91,28 @@ export const Reservas = () => {
   const getReservations = async () => {
   
     await api.get("/reservations", {
-        params: {
-           token 
-        },
-      }).then((res) => {
-        setReservation(res.data.list)
-      });
+      params: {
+         token 
+      },
+    }).then((res) => {
+      setReservation(res.data.list)
+    });
 
-      await api.get("/areas", {
-        params: {
-          token 
-        },
-      }).then((res) => {
-         setReservation(res.data.list)
-      });
+    await api.get("/areas", {
+      params: {
+        token 
+      },
+    }).then((res) => {
+       setAreas(res.data.list)
+    });
 
-      await api.get("/units", {
-        params: {
-           token 
-        },
-      }).then((res) => {
-        setReservation(res.data.list)
-      });
+    await api.get("/units", {
+      params: {
+         token 
+      },
+    }).then((res) => {
+      setUnit(res.data.list)
+    });
     }
 
   const submitForm = (data: any) => {
@@ -119,7 +120,7 @@ export const Reservas = () => {
   };
 
   const editReservation = async (data: Inputs) => {
-    await api.put(`/reservation/${modalInfo?.id}`, {
+    await api.put(`/reservation/${data.id}`, {
       id_unit: data.id_unit,
       id_area: data.id_area,
       reservation_date: data.reservation_date,
@@ -143,7 +144,7 @@ export const Reservas = () => {
         reservation_date: data.reservation_date,
         token,
       }).then( res => {
-        if(res.data.error === '') {
+        if (res.data.error === '') {
           toasts.sucessNotification('Reserva salvo com sucesso')
           reset()
         }else {
@@ -163,7 +164,7 @@ export const Reservas = () => {
         token: token
       }
     }).then( res => {
-      if(res.data.error === '') {
+      if (res.data.error === '') {
         toasts.sucessNotification('Reserva Excluida com sucesso com sucesso')
       }
     })

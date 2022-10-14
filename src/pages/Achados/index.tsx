@@ -1,11 +1,15 @@
 import { useEffect, useState } from 'react';
 import { Item } from 'react-photoswipe-gallery';
-import { Pagination } from '../../components/page';
+
+import Lightbox from 'yet-another-react-lightbox';
+import 'yet-another-react-lightbox/styles.css';
+
+import { Pagination } from '../../components/Pagenation';
 import { Theme } from '../../components/SideBarTheme';
 import { AreaTable } from '../../components/TableArea';
 import { TableHead } from '../../components/TableHead';
 import { api } from '../../services/api/api';
-import { Photo } from '../ocorrencias/styles';
+import { Photo } from '../Ocorrencias/styles';
 import { Date, Unit, Where } from './styles';
 
 interface DataFoundAndLostType {
@@ -19,10 +23,13 @@ interface DataFoundAndLostType {
 
 export const Achados = () => {
   const token = localStorage.getItem('@user:admin');
+  const [photos, setPhotos] = useState<any>([])
 
   const [dataFoundAndLost, setDataFoundAndLoast] = useState<
     DataFoundAndLostType[]
   >([]);
+
+  const [open, setIsOpen] = useState(false)
 
   let PageSize = 7;
 
@@ -72,14 +79,27 @@ export const Achados = () => {
               <Where>{data.where}</Where>
               <Unit>{data.description}</Unit>
               <Date>{data.datecreated_formatted}</Date>
-              <Photo>
-                <div>{'Fotos'}</div>
+              <Photo onClick={() => { 
+                setPhotos(data.photo)
+                setIsOpen(true)
+
+              }}>
+                <div>1 foto</div>
               </Photo>
             </div>
           );
         })}
       </AreaTable>
 
+      <Lightbox 
+        open={open}
+        close={() => setIsOpen(false)}
+        slides={[
+          {
+            src: photos,
+          },
+        ]}
+      />
       <Pagination
         currentPage={currentPage}
         totalCount={dataFoundAndLost.length}

@@ -1,10 +1,10 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const Container = styled.div`
   height: 100px;
   display: flex;
   color: #7f8da1;
-  flex-direction: column;
+  flex-direction: column;     
   font-family: Nunito, sans-serif;
 `;
 
@@ -77,7 +77,6 @@ export const DashboardList = styled.div`
 
 export const ThemeMain = styled.div`
   display: flex;
-
 `;
 export const Header = styled.div`
   width: 100%;
@@ -104,7 +103,6 @@ export const ProfileArea = styled.div``;
 
 export const SearchArea = styled.div`
   width: 250px;
-
 
   input {
     width: 171px;
@@ -149,7 +147,6 @@ export const PhotoUserArea = styled.div`
 export const PhotoUser = styled.div`
   margin: 0 20px 0 20px;
   cursor: pointer;
-  
 `;
 
 export const Body = styled.div`

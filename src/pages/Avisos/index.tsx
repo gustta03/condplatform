@@ -21,7 +21,7 @@ import { toasts } from '../../utils/toast';
 
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { ButtonsArea } from '../Documentos/styles';
-import { Pagination } from '../../components/page';
+import { Pagination } from '../../components/Pagenation';
 
 export interface TypeData {
   body: string;
@@ -96,11 +96,13 @@ export const Avisos = () => {
   };
 
   const handleEditButton = async (data: Input) => {
-    await api.put(`/wall/${data.id}}`, {
+    await api.put(`/wall/${Modal?.id}`, {
       token: token,
       title: data.title,
       body: data.body,
     });
+
+    console.log(data.id)
 
     toasts.sucessNotification('Aviso editado com sucesso!');
 
@@ -226,6 +228,7 @@ export const Avisos = () => {
                       onClick={() => {
                         setModal({
                           title: 'Editar',
+                          id: item.id
                         });
                         setStateModal(true);
                       }}

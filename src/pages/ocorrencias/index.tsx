@@ -1,14 +1,12 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { AreaTable } from '../../components/TableArea';
-import { Buttons } from '../../components/Buttons';
-import { ModalEdit } from '../../components/Modal';
 import { Theme } from '../../components/SideBarTheme';
 import { TableHead } from '../../components/TableHead';
 import { api } from '../../services/api/api';
 import { Photo, Unit, Date, Checked } from './styles';
 import { Root } from '@radix-ui/react-dialog';
 
-import { Pagination } from '../../components/page';
+import { Pagination } from '../../components/Pagenation';
 
 
 // import { LoadingRequest } from '../../components/Loading/Loading';
@@ -47,7 +45,7 @@ export const Ocorrencias = () => {
   const lastPageIndex = firstPageIndex + PageSize;
   const currentItems = warningData.slice(firstPageIndex, lastPageIndex);
 
-  const getOcoreencias = async () => {
+  const getOcoreencias = useCallback(async () => {
     await api
       .get('/warnings', {
         params: {
@@ -57,9 +55,9 @@ export const Ocorrencias = () => {
       .then(res => {
         setWarningData(res.data.list);
       });
-  };
+  }, [warningData])
 
-  const updateStatuswarnig = async (id: number) => {
+  const updateStatuswarnig = useCallback(async (id: number) => {
   setLoading(true)
     const get = await api
       .put(`/warning/${id}`, {
@@ -70,8 +68,8 @@ export const Ocorrencias = () => {
           getOcoreencias()
           setLoading(false)
         }
-      });
-  };
+     });
+  }, [])
 
   useEffect(() => {
     getOcoreencias();
@@ -85,9 +83,9 @@ export const Ocorrencias = () => {
         <AreaTable>
           <TableHead resolvidos="Resolvido" unit photos date="Data" title />
 
-          {currentItems.map((item, index) => {
+          {currentItems.map((item) => {
             return (
-              <div id="index">
+              <div key={item.id} >
                 <Checked
                   type={'checkbox'}
                   checked={item.status === 'RESOLVED' ? true : false}
