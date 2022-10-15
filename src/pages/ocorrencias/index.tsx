@@ -1,49 +1,48 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { AreaTable } from '../../components/TableArea';
-import { Theme } from '../../components/SideBarTheme';
-import { TableHead } from '../../components/TableHead';
-import { api } from '../../services/api/api';
-import { Photo, Unit, Date, Checked } from './styles';
-import { Root } from '@radix-ui/react-dialog';
+import { useCallback, useEffect, useMemo, useState } from 'react'
+import { AreaTable } from '../../components/TableArea'
+import { Theme } from '../../components/SideBarTheme'
+import { TableHead } from '../../components/TableHead'
+import { api } from '../../services/api/api'
+import { Photo, Unit, Date, Checked } from './styles'
+import { Root } from '@radix-ui/react-dialog'
 
-import { Pagination } from '../../components/Pagenation';
+import { Pagination } from '../../components/Pagenation'
 
+// import { LoadingRequest } from '../../components/Loading/Loading'
 
-// import { LoadingRequest } from '../../components/Loading/Loading';
-
-import Lightbox from 'yet-another-react-lightbox';
-import 'yet-another-react-lightbox/styles.css';
+import Lightbox from 'yet-another-react-lightbox'
+import 'yet-another-react-lightbox/styles.css'
 
 interface WarningTypes {
-  title: string;
-  datecreated: string;
-  datecreated_formatted: string;
-  id: number;
-  id_unit: number;
-  photos: string[];
-  status: string;
-  name_unit: string;
+  title: string
+  datecreated: string
+  datecreated_formatted: string
+  id: number
+  id_unit: number
+  photos: string[]
+  status: string
+  name_unit: string
 }
 
 export const Ocorrencias = () => {
-  const [warningData, setWarningData] = useState<WarningTypes[]>([]);
+  const [warningData, setWarningData] = useState<WarningTypes[]>([])
 
-  const [StateModal, setStateModal] = useState(false);
-  const [Loading, setLoading] = useState(false);
+  const [StateModal, setStateModal] = useState(false)
+  const [Loading, setLoading] = useState(false)
 
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false)
 
-  const [photoList, setPhotoList] = useState<any>([]);
+  const [photoList, setPhotoList] = useState<any>([])
 
-  const token: string | null = localStorage.getItem('@user:admin');
+  const token: string | null = localStorage.getItem('@user:admin')
 
-  let PageSize = 7;
+  let PageSize = 7
 
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(1)
 
-  const firstPageIndex = (currentPage - 1) * PageSize;
-  const lastPageIndex = firstPageIndex + PageSize;
-  const currentItems = warningData.slice(firstPageIndex, lastPageIndex);
+  const firstPageIndex = (currentPage - 1) * PageSize
+  const lastPageIndex = firstPageIndex + PageSize
+  const currentItems = warningData.slice(firstPageIndex, lastPageIndex)
 
   const getOcoreencias = useCallback(async () => {
     await api
@@ -53,12 +52,12 @@ export const Ocorrencias = () => {
         },
       })
       .then(res => {
-        setWarningData(res.data.list);
-      });
+        setWarningData(res.data.list)
+      })
   }, [warningData])
 
   const updateStatuswarnig = useCallback(async (id: number) => {
-  setLoading(true)
+    setLoading(true)
     const get = await api
       .put(`/warning/${id}`, {
         token: token,
@@ -68,24 +67,23 @@ export const Ocorrencias = () => {
           getOcoreencias()
           setLoading(false)
         }
-     });
+      })
   }, [])
 
   useEffect(() => {
-    getOcoreencias();
-  }, []);
+    getOcoreencias()
+  }, [])
 
   return (
     <Root open={StateModal}>
-    
       <Theme>
         <div>Tela de ocorrências</div>
         <AreaTable>
           <TableHead resolvidos="Resolvido" unit photos date="Data" title />
 
-          {currentItems.map((item) => {
+          {currentItems.map(item => {
             return (
-              <div key={item.id} >
+              <div key={item.id}>
                 <Checked
                   type={'checkbox'}
                   checked={item.status === 'RESOLVED' ? true : false}
@@ -97,16 +95,18 @@ export const Ocorrencias = () => {
 
                 <Photo
                   onClick={() => {
-                    setPhotoList(item.photos);
-                    setOpen(true);
-                    console.log(item.photos);
+                    setPhotoList(item.photos)
+                    setOpen(true)
+                    console.log(item.photos)
                   }}
                 >
                   {' '}
-                  <div>{item.photos.length } foto{item.photos.length > 1?'s' : ''}</div>
+                  <div>
+                    {item.photos.length} foto{item.photos.length > 1 ? 's' : ''}
+                  </div>
                 </Photo>
               </div>
-            );
+            )
           })}
         </AreaTable>
 
@@ -120,8 +120,6 @@ export const Ocorrencias = () => {
           ]}
         />
 
-        
-
         <Pagination
           currentPage={currentPage}
           totalCount={warningData.length}
@@ -130,5 +128,5 @@ export const Ocorrencias = () => {
         />
       </Theme>
     </Root>
-  );
-};
+  )
+}

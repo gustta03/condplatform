@@ -1,4 +1,5 @@
 import styled from "styled-components";
+
 interface Props {
   bg: string | undefined;
 }

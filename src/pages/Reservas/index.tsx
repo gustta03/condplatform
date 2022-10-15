@@ -1,23 +1,22 @@
-import { AreaTable } from "../../components/TableArea";
+import { AreaTable } from '../../components/TableArea';
 
-import { Close, Root } from "@radix-ui/react-dialog";
-import { Theme } from "../../components/SideBarTheme";
-import { useCallback, useEffect, useState } from "react";
-import { TableHead } from "../../components/TableHead";
-import { api } from "../../services/api/api";
-import { Buttons } from "../../components/Buttons";
-import { Input, Error, LineHorizont, ModalArea, Select } from "./styles";
+import { Close, Root } from '@radix-ui/react-dialog';
+import { Theme } from '../../components/SideBarTheme';
+import { useCallback, useEffect, useState } from 'react';
+import { TableHead } from '../../components/TableHead';
+import { api } from '../../services/api/api';
+import { Buttons } from '../../components/Buttons';
+import { Input, Error, LineHorizont, ModalArea, Select } from './styles';
 
+import { ModalEdit } from '../../components/Modal';
 
-import { ModalEdit } from "../../components/Modal";
+import { useForm } from 'react-hook-form';
 
-import { useForm } from "react-hook-form";
+import { yupResolver } from '@hookform/resolvers/yup';
 
-import { yupResolver } from "@hookform/resolvers/yup";
-
-import * as yup from "yup";
-import { toasts } from "../../utils/toast";
-import { Pagination } from "../../components/Pagenation";
+import * as yup from 'yup';
+import { toasts } from '../../utils/toast';
+import { Pagination } from '../../components/Pagenation';
 
 interface TypeReservations {
   id: number;
@@ -30,7 +29,7 @@ interface TypeReservations {
 }
 
 interface ModalInfo {
-  title: "Nova" | "Editar" | "Deletar";
+  title: 'Nova' | 'Editar' | 'Deletar';
   id: number | null;
   selectArea?: number | string;
   selectUnit?: number | string;
@@ -50,7 +49,7 @@ interface Inputs {
 }
 
 export const Reservas = () => {
-  const token: any = localStorage.getItem("@user:admin");
+  const token: any = localStorage.getItem('@user:admin');
 
   const [StateModal, setStateModal] = useState(false);
   const [dataReservation, setReservation] = useState<TypeReservations[]>([]);
@@ -58,119 +57,134 @@ export const Reservas = () => {
   const [areas, setAreas] = useState<dataSelect[]>([]);
   const [unity, setUnit] = useState<dataSelect[]>([]);
 
-
-  const [modalAreaId, setModalAreaId] = useState("");
-  const [modalUnitId, setModalUnitId] = useState("");
+  const [modalAreaId, setModalAreaId] = useState('');
+  const [modalUnitId, setModalUnitId] = useState('');
   const [loading, setLoading] = useState(false);
 
   const [addOrEdit, setAddOrEdit] = useState(false);
-  
-  let PageSize = 5
+
+  let PageSize = 5;
 
   const [currentPage, setCurrentPage] = useState(1);
 
-    const firstPageIndex = (currentPage - 1) * PageSize;
-    const lastPageIndex = firstPageIndex + PageSize;
-    const currentItems = dataReservation.slice(firstPageIndex, lastPageIndex);
+  const firstPageIndex = (currentPage - 1) * PageSize;
+  const lastPageIndex = firstPageIndex + PageSize;
+  const currentItems = dataReservation.slice(firstPageIndex, lastPageIndex);
 
   const schema = yup.object().shape({
-    id_unit: yup.string().required("A unidade é obrigatoria"),
-    id_area: yup.string().required("A area é obrigatoria"),
-    reservation_date: yup.string().required("A data é obrigatoria"),
+    id_unit: yup.string().required('A unidade é obrigatoria'),
+    id_area: yup.string().required('A area é obrigatoria'),
+    reservation_date: yup.string().required('A data é obrigatoria'),
   });
 
-  const { register, handleSubmit, reset, formState: { errors } } = useForm<Inputs>({
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<Inputs>({
     resolver: yupResolver(schema),
   });
 
   const ResteInputs = () => {
-    reset()
-    setStateModal(false)
-  }
+    reset();
+    setStateModal(false);
+  };
 
   const getReservations = async () => {
-  
-    await api.get("/reservations", {
-      params: {
-         token 
-      },
-    }).then((res) => {
-      setReservation(res.data.list)
-    });
+    await api
+      .get('/reservations', {
+        params: {
+          token,
+        },
+      })
+      .then(res => {
+        setReservation(res.data.list);
+      });
 
-    await api.get("/areas", {
-      params: {
-        token 
-      },
-    }).then((res) => {
-       setAreas(res.data.list)
-    });
+    await api
+      .get('/areas', {
+        params: {
+          token,
+        },
+      })
+      .then(res => {
+        setAreas(res.data.list);
+      });
 
-    await api.get("/units", {
-      params: {
-         token 
-      },
-    }).then((res) => {
-      setUnit(res.data.list)
-    });
-    }
+    await api
+      .get('/units', {
+        params: {
+          token,
+        },
+      })
+      .then(res => {
+        setUnit(res.data.list);
+      });
+  };
 
   const submitForm = (data: any) => {
     return addOrEdit ? createReservation(data) : editReservation(data);
   };
 
   const editReservation = async (data: Inputs) => {
-    await api.put(`/reservation/${data.id}`, {
-      id_unit: data.id_unit,
-      id_area: data.id_area,
-      reservation_date: data.reservation_date,
-      token,
-    }).then( res => {
-      if(res.data.error === '') {
-        toasts.sucessNotification('Reserva editada com sucesso')
-        reset()
-      }
-    })
-
-    setStateModal(false);
-    getReservations()
-  };
-
-  const createReservation = useCallback(
-    async (data: Inputs) => {
-      await api.post(`/reservations`, {
+    await api
+      .put(`/reservation/${data.id}`, {
         id_unit: data.id_unit,
         id_area: data.id_area,
         reservation_date: data.reservation_date,
         token,
-      }).then( res => {
+      })
+      .then(res => {
         if (res.data.error === '') {
-          toasts.sucessNotification('Reserva salvo com sucesso')
-          reset()
-        }else {
-          toasts.errorNotification(res.data.error)
+          toasts.sucessNotification('Reserva editada com sucesso');
+          reset();
         }
       });
 
+    setStateModal(false);
+    getReservations();
+  };
+
+  const createReservation = useCallback(
+    async (data: Inputs) => {
+      await api
+        .post(`/reservations`, {
+          id_unit: data.id_unit,
+          id_area: data.id_area,
+          reservation_date: data.reservation_date,
+          token,
+        })
+        .then(res => {
+          if (res.data.error === '') {
+            toasts.sucessNotification('Reserva salvo com sucesso');
+            reset();
+          } else {
+            toasts.errorNotification(res.data.error);
+          }
+        });
+
       setStateModal(false);
-      getReservations()
+      getReservations();
     },
-    [dataReservation]
+    [dataReservation],
   );
 
   const deleteReservation = async (id: any) => {
-    await api.delete(`/reservation/${id}`, {
-      params: {
-        token: token
-      }
-    }).then( res => {
-      if (res.data.error === '') {
-        toasts.sucessNotification('Reserva Excluida com sucesso com sucesso')
-      }
-    })
+    await api
+      .delete(`/reservation/${id}`, {
+        params: {
+          token: token,
+        },
+      })
+      .then(res => {
+        if (res.data.error === '') {
+          toasts.sucessNotification('Reserva Excluida com sucesso com sucesso');
+        }
+      });
 
-    setStateModal(false)
-    getReservations()
+    setStateModal(false);
+    getReservations();
   };
 
   useEffect(() => {
@@ -186,10 +200,10 @@ export const Reservas = () => {
           <div
             onClick={() => {
               setStateModal(true);
-              setModalInfo({ title: "Nova", id: null });
+              setModalInfo({ title: 'Nova', id: null });
             }}
           >
-            <Buttons type={"BlueBtn"} content={"Nova reserva"} />
+            <Buttons type={'BlueBtn'} content={'Nova reserva'} />
           </div>
         </Close>
 
@@ -206,7 +220,7 @@ export const Reservas = () => {
                   <b
                     onClick={() => {
                       setModalInfo({
-                        title: "Editar",
+                        title: 'Editar',
                         id: item.id,
                         selectArea: modalAreaId,
                         selectUnit: modalUnitId,
@@ -214,18 +228,18 @@ export const Reservas = () => {
                       setStateModal(true);
                     }}
                   >
-                    <Buttons type="BlueBtn" content={"Editar"} />
+                    <Buttons type="BlueBtn" content={'Editar'} />
                   </b>
                   <b
                     onClick={() => {
                       setModalInfo({
-                        title: "Deletar",
+                        title: 'Deletar',
                         id: item.id,
                       });
                       setStateModal(true);
                     }}
                   >
-                    <Buttons type="Deletar" content={"Deletar"} />
+                    <Buttons type="Deletar" content={'Deletar'} />
                   </b>
                 </p>
               </div>
@@ -233,7 +247,7 @@ export const Reservas = () => {
           })}
 
           <ModalEdit>
-            {modalInfo?.title != "Deletar" && (
+            {modalInfo?.title != 'Deletar' && (
               <form onSubmit={handleSubmit(submitForm)}>
                 <h2>{`${modalInfo?.title} Reserva`}</h2>
                 <LineHorizont />
@@ -242,17 +256,16 @@ export const Reservas = () => {
                 <Select
                   bg={errors.id_unit?.message}
                   id="id_unit"
-                  {...register("id_unit")}
+                  {...register('id_unit')}
                   name="id_unit"
-                
-                  onChange={(e) => setModalUnitId(e.target.value)}
+                  onChange={e => setModalUnitId(e.target.value)}
                 >
-                  <option selected value={''}>Selecione</option>
-                  
+                  <option selected value={''}>
+                    Selecione
+                  </option>
+
                   {unity.map((_unit: dataSelect) => (
-                    <option value={_unit.id}>
-                      {_unit.name}
-                    </option>
+                    <option value={_unit.id}>{_unit.name}</option>
                   ))}
                 </Select>
 
@@ -262,18 +275,15 @@ export const Reservas = () => {
 
                 <Select
                   bg={errors.id_area?.message}
-                  {...register("id_area")}
+                  {...register('id_area')}
                   name="id_area"
-                  onChange={(e) => setModalAreaId(e.target.value)}
+                  onChange={e => setModalAreaId(e.target.value)}
                 >
-                  <option selected value={''}>Selecione</option>
+                  <option selected value={''}>
+                    Selecione
+                  </option>
                   {areas.map((_area: dataSelect) => (
-                    <option
-                      value={_area.id}
-              
-                    >
-                      {_area.title}
-                    </option>
+                    <option value={_area.id}>{_area.title}</option>
                   ))}
                 </Select>
                 <Error>{errors.id_area?.message}</Error>
@@ -282,27 +292,27 @@ export const Reservas = () => {
 
                 <Input
                   bg={errors.reservation_date?.message}
-                  type={"text"}
-                  {...register("reservation_date")}
+                  type={'text'}
+                  {...register('reservation_date')}
                   name="reservation_date"
                 />
 
                 <Error>{errors.reservation_date?.message}</Error>
 
                 <ModalArea>
-                  {modalInfo?.title === "Nova" && (
+                  {modalInfo?.title === 'Nova' && (
                     <button onClick={() => setAddOrEdit(true)}>
                       Adicionar
                     </button>
                   )}
-                  {modalInfo?.title === "Editar" && (
+                  {modalInfo?.title === 'Editar' && (
                     <button onClick={() => setAddOrEdit(false)}>Editar</button>
                   )}
                   <button onClick={() => ResteInputs()}>Cancelar</button>
                 </ModalArea>
               </form>
             )}
-            {modalInfo?.title === "Deletar" && (
+            {modalInfo?.title === 'Deletar' && (
               <>
                 <h4>Excluir reserva</h4>
                 <hr />
@@ -310,7 +320,9 @@ export const Reservas = () => {
                   Deseja realmente <b>EXCLUIR</b> esta reserva?
                 </p>
                 <ModalArea>
-                  <button onClick={() => deleteReservation(modalInfo.id)}>excluir</button>
+                  <button onClick={() => deleteReservation(modalInfo.id)}>
+                    excluir
+                  </button>
                   <button onClick={() => setStateModal(false)}>cancelar</button>
                 </ModalArea>
               </>
@@ -319,13 +331,12 @@ export const Reservas = () => {
         </AreaTable>
 
         <Pagination
-         currentPage={currentPage}
-         totalCount={dataReservation.length}
-         pageSize={PageSize}
-         onPageChange={(page: number) => setCurrentPage(page)}
-        /> 
+          currentPage={currentPage}
+          totalCount={dataReservation.length}
+          pageSize={PageSize}
+          onPageChange={(page: number) => setCurrentPage(page)}
+        />
       </Theme>
     </Root>
   );
-}
-
+};

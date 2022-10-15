@@ -15,4 +15,4 @@ react-hot-toasts <br />
 <img src="https://github.com/gustarpd/condplatform/blob/main/.github/reservas.png" />
 <img src="https://github.com/gustarpd/condplatform/blob/main/.github/ocorrencia.png" />
 
-## Em desenvolvimento 🏗️
+## Em desenvolvimento: 95%... 🏗️
