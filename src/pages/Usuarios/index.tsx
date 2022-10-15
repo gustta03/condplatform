@@ -61,7 +61,7 @@ export const Usuarios = () => {
     name: yup.string().required('O nome do usuário é obrigatorio'),
     email: yup.string().required('o email do usuário é obrigatorio'),
     cpf: yup.string().required('O CPF do usuário é obrigatorio'),
-    password: yup.string().required('O CPF do usuário é obrigatorio'),
+    password: yup.string().required('A senha do usuário é obrigatoria'),
   });
 
   const {
@@ -225,12 +225,12 @@ export const Usuarios = () => {
                 <p>
                   Deseja realmente <b>EXCLUIR</b> este úsuario?
                 </p>
-                <ButtonsArea>
+                <ModalArea>
                   <button onClick={() => deleteUser(TypeModal?.id)}>
                     Excluir
                   </button>
                   <button onClick={() => setStateModal(false)}>Cancelar</button>
-                </ButtonsArea>
+                </ModalArea>
               </>
             )}
           </ModalEdit>

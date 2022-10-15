@@ -129,7 +129,7 @@ export const Reservas = () => {
 
   const editReservation = async (data: Inputs) => {
     await api
-      .put(`/reservation/${data.id}`, {
+      .put(`/reservation/${modalInfo?.id}`, {
         id_unit: data.id_unit,
         id_area: data.id_area,
         reservation_date: data.reservation_date,
