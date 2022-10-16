@@ -1,4 +1,4 @@
-import { Trigger } from "@radix-ui/react-dialog";
+
 import { Button } from "./styles";
 
 interface PropButton {

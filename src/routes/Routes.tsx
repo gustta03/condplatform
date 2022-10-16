@@ -8,6 +8,7 @@ import { Reservas } from '../pages/Reservas';
 import { Ocorrencias } from '../pages/Ocorrencias';
 import { Achados } from '../pages/Achados';
 import { Usuarios } from '../pages/Usuarios';
+import { Areas } from '../pages/Areas';
 
 function Rotas() {
   return (
@@ -21,6 +22,7 @@ function Rotas() {
       <Route path="/ocorrencias" element={<Ocorrencias />} />
       <Route path="/achados" element={<Achados />} />
       <Route path="/usuarios" element={<Usuarios />} />
+      <Route path="/areascomuns" element={<Areas />} />
     </Routes>
   );
 }

@@ -152,9 +152,9 @@ export const Usuarios = () => {
         <div>Tela de usúarios</div>
         <div
           onClick={() => {
-            setStateModal(true);
-            setIsAddOrEdit(true);
-            setTypeModal({
+              setStateModal(true);
+              setIsAddOrEdit(true);
+              setTypeModal({
               title: 'Novo',
             });
           }}
@@ -162,7 +162,45 @@ export const Usuarios = () => {
           <Buttons type="BlueBtn" content="Adicionar usuario" />
         </div>
         <AreaTable>
-          <ModalEdit>
+         
+          <TableHead name email actions cpf />
+          {currentItems.map(data => {
+            return (
+              <div key={data.id}>
+                <p>{data.name}</p>
+                <p>{data.cpf}</p>
+                <p>{data.email}</p>
+
+                <ButtonsContent>
+                  <div
+                    onClick={() => {
+                      setStateModal(true);
+                      setIsAddOrEdit(false);
+                      setTypeModal({
+                        title: 'Editar',
+                        id: data.id,
+                      });
+                    }}
+                  >
+                    <Buttons content="Editar" type={'BlueBtn'} />
+                  </div>
+                  <div
+                    onClick={() => {
+                      setStateModal(true);
+                      setTypeModal({
+                        title: 'Deletar',
+                        id: data.id,
+                      });
+                    }}
+                  >
+                    <Buttons content="Deletar" type={''} />
+                  </div>
+                </ButtonsContent>
+              </div>
+            );
+          })}
+        </AreaTable>
+         <ModalEdit>
             {TypeModal?.title !== 'Deletar' && (
               <form onSubmit={handleSubmit(onSubmit)}>
                 <h1>{TypeModal?.title} usuario</h1>
@@ -235,43 +273,6 @@ export const Usuarios = () => {
             )}
           </ModalEdit>
 
-          <TableHead name email actions cpf />
-          {currentItems.map(data => {
-            return (
-              <div key={data.id}>
-                <p>{data.name}</p>
-                <p>{data.cpf}</p>
-                <p>{data.email}</p>
-
-                <ButtonsContent>
-                  <div
-                    onClick={() => {
-                      setStateModal(true);
-                      setIsAddOrEdit(false);
-                      setTypeModal({
-                        title: 'Editar',
-                        id: data.id,
-                      });
-                    }}
-                  >
-                    <Buttons content="Editar" type={'BlueBtn'} />
-                  </div>
-                  <div
-                    onClick={() => {
-                      setStateModal(true);
-                      setTypeModal({
-                        title: 'Deletar',
-                        id: data.id,
-                      });
-                    }}
-                  >
-                    <Buttons content="Deletar" type={''} />
-                  </div>
-                </ButtonsContent>
-              </div>
-            );
-          })}
-        </AreaTable>
 
         <Pagination
           currentPage={currentPage}

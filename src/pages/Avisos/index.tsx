@@ -48,7 +48,7 @@ export const Avisos = () => {
   const [body, setInputBody] = useState('')
   const [StateModal, setStateModal] = useState(false)
 
-  let PageSize = 6
+  const PageSize = 6
 
   const [currentPage, setCurrentPage] = useState(1)
 

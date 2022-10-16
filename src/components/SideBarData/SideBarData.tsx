@@ -42,6 +42,6 @@ export const SideBarData = [
   {
     title: "Areas comuns",
     icon: <Icon.Clipboard size={24} />,
-    link: "/areas",
+    link: "/areascomuns",
   },
 ];

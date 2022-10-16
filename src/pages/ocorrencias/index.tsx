@@ -36,7 +36,7 @@ export const Ocorrencias = () => {
 
   const token: string | null = localStorage.getItem('@user:admin')
 
-  let PageSize = 7
+  const PageSize = 7
 
   const [currentPage, setCurrentPage] = useState(1)
 

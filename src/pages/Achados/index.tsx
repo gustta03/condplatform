@@ -31,7 +31,7 @@ export const Achados = () => {
 
   const [open, setIsOpen] = useState(false)
 
-  let PageSize = 7
+  const PageSize = 7
 
   const [currentPage, setCurrentPage] = useState(5)
 

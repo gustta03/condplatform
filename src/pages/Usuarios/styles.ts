@@ -6,7 +6,7 @@ interface Props {
 
 export const ButtonsContent = styled.div`
   width: 126px;
-  margin: 0 45px 0 0126px;
+  margin: 0 25px 0 0px;
 `
 
 export const Input = styled.input<Props>`
