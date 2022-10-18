@@ -105,3 +105,9 @@ export const ButtonModalArea = styled.span`
     border-radius: 5px;
   }
 `;
+
+export const Hr = styled.div`
+ width: 100%;
+ border-top: 1px solid #000;
+ border-bottom: 1px solid #000;
+`

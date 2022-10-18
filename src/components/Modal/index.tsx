@@ -1,7 +1,7 @@
 import * as Dialog from "@radix-ui/react-dialog";
 
 import { ReactNode } from "react";
-import { Content, EditArea, FormMain, ModalFormArea, Overlay, ButtonCloseArea } from './styles'
+import { Content, EditArea, FormMain, ModalFormArea, Overlay, ButtonCloseArea, Hr } from './styles'
 
 interface Children {
   children: ReactNode;
@@ -17,15 +17,20 @@ export const ModalEdit = ({ children }: Children) => {
         </Dialog.Overlay>
         <Content>
           <Dialog.Content>
+  
             <FormMain>
               <ButtonCloseArea>
                 <Dialog.Trigger asChild>
                  
                 </Dialog.Trigger>
               </ButtonCloseArea>
-              <ModalFormArea>
-                {children}
-              </ModalFormArea>
+             
+               <ModalFormArea>
+              
+                  { children }
+           
+               </ModalFormArea>
+           
             </FormMain>
           </Dialog.Content>
         </Content>

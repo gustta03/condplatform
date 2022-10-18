@@ -150,8 +150,8 @@ export const Usuarios = () => {
     <Root open={stateModal}>
       <Theme>
         <div>Tela de usúarios</div>
-        <div
-          onClick={() => {
+        <div 
+           onClick={() => {
               setStateModal(true);
               setIsAddOrEdit(true);
               setTypeModal({

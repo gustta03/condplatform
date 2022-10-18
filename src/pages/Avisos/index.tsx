@@ -165,7 +165,9 @@ export const Avisos = () => {
             <form onSubmit={handleSubmit(onSubmit)}>
               {Modal?.title != 'Deletar' && (
                 <>
-                  <h2>{Modal?.title} aviso</h2>
+                <span>
+                <h2>{Modal?.title} aviso</h2>
+                </span>
                   <label>Título</label>
                   <Input
                     bg={errors.title?.message}

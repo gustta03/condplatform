@@ -1,5 +1,12 @@
 import { Root } from '@radix-ui/react-dialog';
-import { useCallback, useEffect, useState } from 'react';
+import {
+  ChangeEvent,
+  DetailedHTMLProps,
+  InputHTMLAttributes,
+  useCallback,
+  useEffect,
+  useState,
+} from 'react';
 import { Buttons } from '../../components/Buttons';
 import { ModalEdit } from '../../components/Modal';
 import { Theme } from '../../components/SideBarTheme';
@@ -12,7 +19,12 @@ import { Input, ModalArea } from '../Documentos/styles';
 import { ButtonsContent } from '../Usuarios/styles';
 import { CheckBox, Cover } from './styles';
 
-import { useForm } from 'react-hook-form'
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
+
+import { useForm } from 'react-hook-form';
+import { Hr } from '../../components/Modal/styles';
+// import { formLabels } from '../../helper/form';
 
 interface dataSelect {
   title: string;
@@ -30,39 +42,93 @@ interface Modal {
   id?: number | undefined;
 }
 
+interface FormSchema {
+  chekbox: boolean;
+  cover: FileList;
+  start_time: string;
+  end_time: string;
+  title: string;
+}
+
 export const Areas = () => {
+  const DaysLabels = ['segunda', 'terça', 'quarta', 'quinta', 'sexta'];
+
   const [areas, setAreas] = useState<dataSelect[]>([]);
   const [IsOpen, setIsOpen] = useState(false);
-  const token = localStorage.getItem('@user:admin');
+  const token: any = localStorage.getItem('@user:admin');
   const [ModalType, setModalType] = useState<Modal>();
-  const [isAddOrEdit, setIsAddOrEdit] = useState(false) 
+  const [isAddOrEdit, setIsAddOrEdit] = useState(false);
+  const [modalDaysCheck, setModalDaysCheck] = useState<string[]>([]);
+  const [allowed, setAllowed] = useState<number>();
 
-  const { handleSubmit, register } = useForm()
+
+  const schema = yup.object().shape({
+    chekbox: yup.boolean().required('O nome do documento é obrigatorio'),
+    cover: yup.mixed().test('required', 'O arquivo é obrigatorio', _file => {
+      if (_file.length >= 1) {
+        return true;
+      }
+
+      return false;
+    }),
+    start_time: yup.string().required('A data de incio é obrigatória'),
+    and_time: yup.string().required('A data de fim é obrigatória'),
+  });
+
+  const {
+    handleSubmit,
+    register,
+    reset,
+    formState: { errors },
+  } = useForm<FormSchema>();
 
   const saveModal = useCallback(() => {
     setIsOpen(false);
+    reset()
     getAreas();
   }, []);
 
-  const formSubmit = useCallback((data: any) => {
-    if(isAddOrEdit) {
-      return addNewArea(data)
-    }else {
-      return handleEditArea(data)
+  const formSubmit = (data: any) => {
+    if (!isAddOrEdit) {
+      return addNewArea(data);
+    } else {
+      return handleEditArea(data);
     }
-  }, [])
+  };
 
-  const addNewArea = async (data: any) => {
-    // await api.post('/areas', {
-    
-    // })
+  const addNewArea = async (data: FormSchema) => {
+    const config = {
+      headers: {
+        'Content-Type': 'multipart/form-data charset=utf-8',
+      },
+    };
 
-    console.log(data)
-  }
-  
-  const handleEditArea = async (data: any) => {
-    // await api.put('/', { })
-  } 
+    await api.post(
+      '/areas',
+      {
+        title: data.title,
+        cover: data.cover[0],
+        allowed: allowed,
+        days: modalDaysCheck.join(','),
+        start_time: data.start_time,
+        end_time: data.end_time,
+        token,
+      },
+      config,
+    ).then((res) => {
+      if(res.data.error === '') {
+        toasts.sucessNotification('Área comum adicionada com sucesso!')
+        saveModal()
+      }
+      else{
+        toasts.errorNotification(res.data.error)
+      }
+    })
+  };
+
+  const handleEditArea = async (data: FormSchema) => {
+    // await api.put('/area', {}, {});
+  };
 
   const deleteArea = async (id: number | undefined) => {
     await api
@@ -73,7 +139,7 @@ export const Areas = () => {
       })
       .then(res => {
         if (res.data.error === '') {
-          toasts.sucessNotification('Area excluída com sucesso');
+          toasts.sucessNotification('Área excluída com sucesso');
           saveModal();
         }
       });
@@ -90,6 +156,20 @@ export const Areas = () => {
         setAreas(res.data.list);
       });
   }, []);
+
+  const ToggleModalDays = (item: any | undefined, value: any | undefined) => {
+    const days = [...modalDaysCheck];
+
+    if (value.target.checked === false) {
+      days.filter(days => days !== item);
+    } else {
+      days.push(item);
+    }
+
+    console.log(days);
+
+    setModalDaysCheck(days);
+  };
 
   useEffect(() => {
     getAreas();
@@ -116,6 +196,7 @@ export const Areas = () => {
               <div key={_data.id}>
                 <CheckBox type="checkbox" checked={_data.allowed === 1} />
                 <p>{_data.title}</p>
+
                 <p>
                   <Cover src={_data.cover}></Cover>
                 </p>
@@ -150,23 +231,134 @@ export const Areas = () => {
             );
           })}
         </AreaTable>
+       
         <ModalEdit>
+        <h3>{ModalType?.title} àrea comum</h3>
+       
           <form onSubmit={handleSubmit(formSubmit)}>
             {ModalType?.title !== 'Excluir' && (
               <>
-                <h3>{ModalType?.title} àrea comum</h3>
                 <label>Ativo</label>
-                <input {...register('chekbox')} type={'checkbox'} />
+
+                <p>{errors.chekbox?.message}</p>
+                <input {...register('chekbox')} type={'checkbox'}  onChange={e => setAllowed(e.target.value ? 1 : 0)} />
+                <br />
+
+       
+                <br />
+                <label>Dias da semana</label>
                 <br />
                 <br />
+                <input
+                  type="checkbox"
+                  value={0}
+                  checked={modalDaysCheck.includes('0')}
+                  onChange={value => ToggleModalDays('0', value)}
+                  defaultValue={0}
+                />
+
+                <label>segunda</label>
+
+                <input
+                  type="checkbox"
+                  checked={modalDaysCheck.includes('1')}
+                  onChange={value => ToggleModalDays('1', value)}
+                  defaultValue={1}
+                />
+
+                <label>terça</label>
+
+                <input
+                  type="checkbox"
+                  checked={modalDaysCheck.includes('2')}
+                  onChange={value => ToggleModalDays('2', value)}
+                  defaultValue={2}
+                />
+
+                <label>quarta</label>
+
+                <input
+                  type="checkbox"
+                  checked={modalDaysCheck.includes('3')}
+                  onChange={value => ToggleModalDays('3', value)}
+                  defaultValue={3}
+                />
+
+                <label>quinta</label>
+
+                <input
+                  type="checkbox"
+                  checked={modalDaysCheck.includes('4')}
+                  onChange={value => ToggleModalDays('4', value)}
+                  defaultValue={4}
+                />
+
+                <label>sexta</label>
+
+                <input
+                  type="checkbox"
+                  checked={modalDaysCheck.includes('5')}
+                  onChange={value => ToggleModalDays('5', value)}
+                  defaultValue={5}
+                />
+
+                <label>sabado</label>
+
+                <input
+                  type="checkbox"
+                  checked={modalDaysCheck.includes('6')}
+                  onChange={value => ToggleModalDays('6', value)}
+                  defaultValue={5}
+                />
+
+                <label>domingo</label>
+
+                <input
+                  type="checkbox"
+                  checked={modalDaysCheck.includes('7')}
+                  onChange={value => ToggleModalDays('7', value)}
+                  defaultValue={5}
+                />
+                <br/>
+                <br/>
+
+                <label>Titulo</label>
+                <Input bg="" {...register('title')} name="title" />
                 <label>capa do local</label>
-                <Input {...register('cover')} bg="" type={'file'} />
+                <p>{errors.cover?.message}</p>
+                <Input
+                  {...register('cover')}
+                  bg=""
+                  name="cover"
+                  type={'file'}
+
+                />
                 <label>data de inicio</label>
-                <Input {...register('start_time')} bg="" type={'date'} />
+                <p>{errors.start_time?.message}</p>
+                <Input {...register('start_time')} bg="" />
                 <label>data de fim</label>
-                <Input {...register('end_time')} bg="" type={'date'} />
+                <p>{errors.end_time?.message}</p>
+                <Input {...register('end_time')} bg="" />
+
                 <ModalArea>
-                  <button onClick={() => { setIsAddOrEdit(false) }}>Salvar área</button>
+                  {ModalType?.title === 'Nova' && (
+                    <button
+                      onClick={() => {
+                        setIsAddOrEdit(false);
+                      }}
+                    >
+                      Salvar área
+                    </button>
+                  )}
+                  {ModalType?.title === 'Editar' && (
+                    <button
+                      onClick={() => {
+                        setIsAddOrEdit(true);
+                      }}
+                    >
+                      Editar área
+                    </button>
+                  )}
                   <button onClick={() => setIsOpen(false)}>Cancelar</button>
                 </ModalArea>
               </>
