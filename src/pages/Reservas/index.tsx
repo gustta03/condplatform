@@ -71,6 +71,8 @@ export const Reservas = () => {
   const lastPageIndex = firstPageIndex + PageSize;
   const currentItems = dataReservation.slice(firstPageIndex, lastPageIndex);
 
+ 
+
   const schema = yup.object().shape({
     id_unit: yup.string().required('A unidade é obrigatoria'),
     id_area: yup.string().required('A area é obrigatoria'),
@@ -189,7 +191,12 @@ export const Reservas = () => {
 
   useEffect(() => {
     getReservations();
+    console.log(currentPage)
   }, []);
+
+  if(currentItems.length === 0) {
+    setCurrentPage(currentPage - 1)
+  }
 
   return (
     <Root open={StateModal}>

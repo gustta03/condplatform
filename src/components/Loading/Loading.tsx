@@ -1,20 +1,16 @@
 import { Overlay, Root } from '@radix-ui/react-dialog';
-import { Load, Container } from './styled';
+import { ReactNode } from 'react';
+import { Load } from './styled';
 
-interface TypeRoot {
+interface stateLoading {
   open: boolean;
+  children: ReactNode
 }
 
-export const LoadingRequest = ({ open }: TypeRoot) => {
+export const Loading = ({ open, children }: stateLoading) => {
   return (
-    <Root open={open}>
-      <Container>
-        <Overlay>
-          <Load>
-            <div className="lds-facebook"><div></div><div></div><div></div></div>
-          </Load>
-        </Overlay>
-      </Container>
-    </Root>
-  );
-};
+    <div>
+      {open ? <Load>carregando</Load> : children}
+    </div>
+  )
+}

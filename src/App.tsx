@@ -8,7 +8,6 @@ function App() {
       <Rotas />
       <GlobalStyle />
       <Toaster />
-      <Toaster />
     </>
   );
 }

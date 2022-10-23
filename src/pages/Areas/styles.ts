@@ -1,8 +1,8 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const CheckBox = styled.input`
- margin: 0 150px 0 0;
-`
+  margin: 0 150px 0 0;
+`;
 
 export const Cover = styled.img`
   width: 90px;
@@ -10,5 +10,9 @@ export const Cover = styled.img`
   position: relative;
   cursor: pointer;
   right: 20px;
-  background-color: red;
-`
+`;
+export const Days = styled.td`
+  width: 120px;
+  height: auto;
+  margin: 0 25px 0 0;
+`;

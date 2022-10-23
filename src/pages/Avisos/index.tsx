@@ -1,67 +1,67 @@
-import { Theme } from '../../components/SideBarTheme'
-import * as yup from 'yup'
+import { Theme } from '../../components/SideBarTheme';
+import * as yup from 'yup';
 
-import { ButtonModalArea, EmptyAlert, Input, ModalFormArea } from './styles'
-import { Button } from './styles'
+import { ButtonModalArea, EmptyAlert, Input, ModalFormArea } from './styles';
+import { Button } from './styles';
 
-import { AreaTable } from '../../components/TableArea'
-import { useCallback, useEffect, useState } from 'react'
-import { api } from '../../services/api/api'
-import { Buttons } from '../../components/Buttons'
-import { ModalEdit } from '../../components/Modal'
-import { TableHead } from '../../components/TableHead'
+import { AreaTable } from '../../components/TableArea';
+import { useCallback, useEffect, useState } from 'react';
+import { api } from '../../services/api/api';
+import { Buttons } from '../../components/Buttons';
+import { ModalEdit } from '../../components/Modal';
+import { TableHead } from '../../components/TableHead';
 
-import { FileArrowUp } from 'phosphor-react'
-import { Root, Trigger } from '@radix-ui/react-dialog'
+import { FileArrowUp } from 'phosphor-react';
+import { Root, Trigger } from '@radix-ui/react-dialog';
 
-import { yupResolver } from '@hookform/resolvers/yup'
+import { yupResolver } from '@hookform/resolvers/yup';
 
-import { toasts } from '../../utils/toast'
+import { toasts } from '../../utils/toast';
 
-import { SubmitHandler, useForm } from 'react-hook-form'
-import { ButtonsArea } from '../Documentos/styles'
-import { Pagination } from '../../components/Pagenation'
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { ButtonsArea } from '../Documentos/styles';
+import { Pagination } from '../../components/Pagenation';
+import { Loading } from '../../components/Loading/Loading';
 
 export interface TypeData {
-  body: string
-  id: number
-  title: string
-  datecreated: string
+  body: string;
+  id: number;
+  title: string;
+  datecreated: string;
 }
 
 interface TypeDataModal {
-  title: string
-  id?: number
+  title: string;
+  id?: number;
 }
 
 interface Input {
-  title: string
-  body: string
-  id: number
+  title: string;
+  body: string;
+  id: number;
 }
 
 export const Avisos = () => {
-  const token = localStorage.getItem('@user:admin')
-  const [data, setData] = useState<TypeData[]>([])
-  const [Modal, setModal] = useState<TypeDataModal>()
-  const [title, setInputTitle] = useState('')
-  const [body, setInputBody] = useState('')
-  const [StateModal, setStateModal] = useState(false)
+  const token = localStorage.getItem('@user:admin');
+  const [data, setData] = useState<TypeData[]>([]);
+  const [Modal, setModal] = useState<TypeDataModal>();
+  const [isLoading, setIsLoading] = useState(false);
+  const [StateModal, setStateModal] = useState(false);
 
-  const PageSize = 6
+  const PageSize = 6;
 
-  const [currentPage, setCurrentPage] = useState(1)
+  const [currentPage, setCurrentPage] = useState(1);
 
-  const firstPageIndex = (currentPage - 1) * PageSize
-  const lastPageIndex = firstPageIndex + PageSize
-  const currentItems = data.slice(firstPageIndex, lastPageIndex)
+  const firstPageIndex = (currentPage - 1) * PageSize;
+  const lastPageIndex = firstPageIndex + PageSize;
+  const currentItems = data.slice(firstPageIndex, lastPageIndex);
 
-  const [AddOrEdit, setAddOrEdit] = useState(false)
+  const [AddOrEdit, setAddOrEdit] = useState(false);
 
   const schema = yup.object().shape({
     title: yup.string().required('o titulo é obrigatorio'),
     body: yup.string().required('o corpo do aviso é obrigatorio'),
-  })
+  });
 
   const {
     register,
@@ -70,60 +70,60 @@ export const Avisos = () => {
     formState: { errors },
   } = useForm<Input>({
     resolver: yupResolver(schema),
-  })
+  });
 
   const onSubmit = (data: Input) => {
     if (AddOrEdit) {
-      createWarning(data)
-      console.log(AddOrEdit)
+      createWarning(data);
+      console.log(AddOrEdit);
     } else {
-      handleEditButton(data)
+      handleEditButton(data);
     }
-  }
+  };
 
   const getWarnings = useCallback(async () => {
+    setIsLoading(true);
     await api
       .get('/walls', {
         params: { token: token },
       })
       .then(res => res.data)
       .then(res => {
-        setData(res.list)
-      })
+        setData(res.list);
+      });
 
-    resetValidation()
-  }, [])
+    resetValidation();
+    setIsLoading(false);
+  }, []);
 
   const resetValidation = () => {
-    reset()
-    setStateModal(false)
-  }
+    reset();
+    setStateModal(false);
+  };
 
   const handleEditButton = async (data: Input) => {
     await api.put(`/wall/${Modal?.id}`, {
       token: token,
       title: data.title,
       body: data.body,
-    })
+    });
 
-    console.log(data.id)
+    toasts.sucessNotification('Aviso editado com sucesso!');
 
-    toasts.sucessNotification('Aviso editado com sucesso!')
-
-    getWarnings()
-    resetValidation()
-  }
+    getWarnings();
+    resetValidation();
+  };
 
   const handleDeleteButton = useCallback(async (id: number | undefined) => {
     await api.delete(`/wall/${id}`, { params: { token } }).then(res => {
       if (res.data.error === '') {
-        toasts.sucessNotification('Aviso excluído com sucesso')
+        toasts.sucessNotification('Aviso excluído com sucesso');
       }
-    })
+    });
 
-    getWarnings()
-    resetValidation()
-  }, [])
+    getWarnings();
+    resetValidation();
+  }, []);
 
   const createWarning = async (data: Input) => {
     await api
@@ -131,148 +131,155 @@ export const Avisos = () => {
       .then(res => res.data)
       .then(res => {
         if (res.error === '') {
-          toasts.sucessNotification('Aviso enviando para o App')
+          toasts.sucessNotification('Aviso enviando para o App');
         }
-      })
+      });
 
-    getWarnings()
-    resetValidation()
-  }
+    getWarnings();
+    resetValidation();
+  };
 
   useEffect(() => {
-    getWarnings()
-  }, [])
+    getWarnings();
+  }, []);
 
   return (
     <Root open={StateModal}>
       <Theme>
-        <p>Tela de avisos</p>
+        <Loading open={isLoading}>
+          <p>Tela de avisos</p>
 
-        <Trigger asChild>
-          <span
-            onClick={() =>
-              setModal({
-                title: 'Adicionar',
-              })
-            }
-          >
-            <Button onClick={() => setStateModal(true)}>Novo aviso</Button>
-          </span>
-        </Trigger>
+          <Trigger asChild>
+            <span
+              onClick={() =>
+                setModal({
+                  title: 'Adicionar',
+                })
+              }
+            >
+              <Button onClick={() => setStateModal(true)}>Novo aviso</Button>
+            </span>
+          </Trigger>
 
-        <ModalEdit>
-          <ModalFormArea>
-            <form onSubmit={handleSubmit(onSubmit)}>
-              {Modal?.title != 'Deletar' && (
-                <>
-                <span>
-                <h2>{Modal?.title} aviso</h2>
-                </span>
-                  <label>Título</label>
-                  <Input
-                    bg={errors.title?.message}
-                    {...register('title')}
-                    name="title"
-                  />
-                  <p>{errors.title?.message}</p>
+          <ModalEdit>
+            <div>....</div>
+            <ModalFormArea>
+              <form onSubmit={handleSubmit(onSubmit)}>
+                {Modal?.title != 'Deletar' && (
+                  <>
+                    <span>
+                      <h2>{Modal?.title} aviso</h2>
+                    </span>
+                    <label>Título</label>
+                    <Input
+                      bg={errors.title?.message}
+                      {...register('title')}
+                      name="title"
+                    />
+                    <p>{errors.title?.message}</p>
 
-                  <label>Corpo do aviso</label>
-                  <Input
-                    bg={errors.body?.message}
-                    {...register('body')}
-                    name="body"
-                  />
-                  <p>{errors.body?.message}</p>
+                    <label>Corpo do aviso</label>
+                    <Input
+                      bg={errors.body?.message}
+                      {...register('body')}
+                      name="body"
+                    />
+                    <p>{errors.body?.message}</p>
 
-                  <ButtonModalArea>
-                    {Modal?.title === 'Adicionar' && (
-                      <button onClick={() => setAddOrEdit(true)}>
-                        Adicionar
+                    <ButtonModalArea>
+                      {Modal?.title === 'Adicionar' && (
+                        <button onClick={() => setAddOrEdit(true)}>
+                          Adicionar
+                        </button>
+                      )}
+                      {Modal?.title !== 'Adicionar' && (
+                        <button onClick={() => setAddOrEdit(false)}>
+                          Editar
+                        </button>
+                      )}
+                      <button onClick={() => setStateModal(false)}>
+                        Cancelar
                       </button>
-                    )}
-                    {Modal?.title !== 'Adicionar' && (
-                      <button onClick={() => setAddOrEdit(false)}>
-                        Editar
+                    </ButtonModalArea>
+                  </>
+                )}
+
+                {Modal?.title === 'Deletar' && (
+                  <>
+                    <h3>Excluir Aviso</h3>
+                    <h4>
+                      Deseja realmente <b>EXCLUIR</b> este aviso?
+                    </h4>
+                    <ButtonModalArea>
+                      <button onClick={() => handleDeleteButton(Modal.id)}>
+                        Excluir
                       </button>
-                    )}
-                    <button onClick={() => setStateModal(false)}>
-                      Cancelar
-                    </button>
-                  </ButtonModalArea>
-                </>
-              )}
+                      <button onClick={() => setStateModal(false)}>
+                        Cancelar
+                      </button>
+                    </ButtonModalArea>
+                  </>
+                )}
+              </form>
+            </ModalFormArea>
+          </ModalEdit>
+          {currentItems.length > 0 && (
+            <AreaTable>
+              <TableHead
+                date={'data de criação'}
+                resolvidos={'Titulo'}
+                actions
+              />
+              {currentItems.map(item => {
+                return (
+                  <div key={item.id}>
+                    <p>{item.title}</p>
+                    <p>{item.datecreated}</p>
+                    <p>
+                      <b
+                        onClick={() => {
+                          setModal({
+                            title: 'Editar',
+                            id: item.id,
+                          });
+                          setStateModal(true);
+                        }}
+                      >
+                        <Buttons type="BlueBtn" content="Editar" />
+                      </b>
+                      <b
+                        onClick={() => {
+                          setModal({
+                            title: 'Deletar',
+                            id: item.id,
+                          });
+                          setStateModal(true);
+                        }}
+                      >
+                        <Buttons type="Deletar" content="Deletar" />
+                      </b>
+                    </p>
+                  </div>
+                );
+              })}
+            </AreaTable>
+          )}
 
-              {Modal?.title === 'Deletar' && (
-                <>
-                  <h3>Excluir Aviso</h3>
-                  <h4>
-                    Deseja realmente <b>EXCLUIR</b> este aviso?
-                  </h4>
-                  <ButtonModalArea>
-                    <button onClick={() => handleDeleteButton(Modal.id)}>
-                      Excluir
-                    </button>
-                    <button onClick={() => setStateModal(false)}>
-                      Cancelar
-                    </button>
-                  </ButtonModalArea>
-                </>
-              )}
-            </form>
-          </ModalFormArea>
-        </ModalEdit>
-        {currentItems.length > 0 && (
-          <AreaTable>
-            <TableHead date={'data de criação'} resolvidos={'Titulo'} actions />
-            {currentItems.map(item => {
-              return (
-                <div key={item.id}>
-                  <p>{item.title}</p>
-                  <p>{item.datecreated}</p>
-                  <p>
-                    <b
-                      onClick={() => {
-                        setModal({
-                          title: 'Editar',
-                          id: item.id,
-                        })
-                        setStateModal(true)
-                      }}
-                    >
-                      <Buttons type="BlueBtn" content="Editar" />
-                    </b>
-                    <b
-                      onClick={() => {
-                        setModal({
-                          title: 'Deletar',
-                          id: item.id,
-                        })
-                        setStateModal(true)
-                      }}
-                    >
-                      <Buttons type="Deletar" content="Deletar" />
-                    </b>
-                  </p>
-                </div>
-              )
-            })}
-          </AreaTable>
-        )}
+          <Pagination
+            currentPage={currentPage}
+            totalCount={data.length}
+            pageSize={PageSize}
+            onPageChange={(page: any) => setCurrentPage(page)}
+          />
 
-        <Pagination
-          currentPage={currentPage}
-          totalCount={data.length}
-          pageSize={PageSize}
-          onPageChange={(page: any) => setCurrentPage(page)}
-        />
-
-        {data.length <= 0 && (
-          <EmptyAlert>
-            <FileArrowUp size={100} color="#a0a0a0" />
-            <h4>Ops... Não há avisos cadastrados no sistema</h4>
-          </EmptyAlert>
-        )}
+          {data.length <= 0 && (
+            <EmptyAlert>
+              <FileArrowUp size={100} color="#a0a0a0" />
+              <h4>Ops... Não há avisos cadastrados no sistema</h4>
+            </EmptyAlert>
+          )}
+        </Loading>
       </Theme>
     </Root>
-  )
-}
+  );
+};

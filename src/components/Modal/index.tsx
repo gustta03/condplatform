@@ -16,6 +16,7 @@ export const ModalEdit = ({ children }: Children) => {
           <Overlay />
         </Dialog.Overlay>
         <Content>
+          <div>................</div>
           <Dialog.Content>
   
             <FormMain>

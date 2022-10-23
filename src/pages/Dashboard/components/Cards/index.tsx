@@ -7,18 +7,18 @@ export const Cards = () => {
     <CardMain>
       <Card>
         <p>Moradores</p>
-        <div>
-          135
-          <img src={UpIcon} />
-          {/* <GroupsIcon className="groupicon" /> */}
+           <div>
+             135
+             <img src={UpIcon} />
+            {/* <GroupsIcon className="groupicon" /> */}
         </div>
       </Card>
       <Card>
-        <p>Blocos</p>
-        <div>
-          221
-          <img src={UpIcon} />
-        </div>
+           <p>Blocos</p>
+               <div>
+                  221
+                 <img src={UpIcon} />
+             </div>
       </Card>
       <Card>
         <p>Unidades</p>

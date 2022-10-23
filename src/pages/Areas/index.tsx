@@ -1,30 +1,21 @@
 import { Root } from '@radix-ui/react-dialog';
-import {
-  ChangeEvent,
-  DetailedHTMLProps,
-  InputHTMLAttributes,
-  useCallback,
-  useEffect,
-  useState,
-} from 'react';
+import { ChangeEvent, useCallback, useEffect, useState } from 'react';
 import { Buttons } from '../../components/Buttons';
 import { ModalEdit } from '../../components/Modal';
 import { Theme } from '../../components/SideBarTheme';
 import { AreaTable } from '../../components/TableArea';
-import { Thead } from '../../components/TableArea/styles';
+
 import { TableHead } from '../../components/TableHead';
 import { api } from '../../services/api/api';
 import { toasts } from '../../utils/toast';
 import { Input, ModalArea } from '../Documentos/styles';
 import { ButtonsContent } from '../Usuarios/styles';
-import { CheckBox, Cover } from './styles';
+import { CheckBox, Cover, Days } from './styles';
 
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 
 import { useForm } from 'react-hook-form';
-import { Hr } from '../../components/Modal/styles';
-// import { formLabels } from '../../helper/form';
 
 interface dataSelect {
   title: string;
@@ -51,8 +42,6 @@ interface FormSchema {
 }
 
 export const Areas = () => {
-  const DaysLabels = ['segunda', 'terça', 'quarta', 'quinta', 'sexta'];
-
   const [areas, setAreas] = useState<dataSelect[]>([]);
   const [IsOpen, setIsOpen] = useState(false);
   const token: any = localStorage.getItem('@user:admin');
@@ -60,7 +49,7 @@ export const Areas = () => {
   const [isAddOrEdit, setIsAddOrEdit] = useState(false);
   const [modalDaysCheck, setModalDaysCheck] = useState<string[]>([]);
   const [allowed, setAllowed] = useState<number>();
-
+  const [day, setDays] = useState<any>([]);
 
   const schema = yup.object().shape({
     chekbox: yup.boolean().required('O nome do documento é obrigatorio'),
@@ -72,7 +61,8 @@ export const Areas = () => {
       return false;
     }),
     start_time: yup.string().required('A data de incio é obrigatória'),
-    and_time: yup.string().required('A data de fim é obrigatória'),
+    title: yup.string().required('O titulo é obrigatorio'),
+    end_time: yup.string().required('A data de fim é obrigatória'),
   });
 
   const {
@@ -80,15 +70,23 @@ export const Areas = () => {
     register,
     reset,
     formState: { errors },
-  } = useForm<FormSchema>();
+  } = useForm<FormSchema>({
+    resolver: yupResolver(schema),
+  });
+
+  const config = {
+    headers: {
+      'Content-Type': 'multipart/form-data charset=utf-8',
+    },
+  };
 
   const saveModal = useCallback(() => {
     setIsOpen(false);
-    reset()
+    reset();
     getAreas();
   }, []);
 
-  const formSubmit = (data: any) => {
+  const formSubmit = (data: FormSchema) => {
     if (!isAddOrEdit) {
       return addNewArea(data);
     } else {
@@ -97,37 +95,53 @@ export const Areas = () => {
   };
 
   const addNewArea = async (data: FormSchema) => {
-    const config = {
-      headers: {
-        'Content-Type': 'multipart/form-data charset=utf-8',
-      },
-    };
-
-    await api.post(
-      '/areas',
-      {
-        title: data.title,
-        cover: data.cover[0],
-        allowed: allowed,
-        days: modalDaysCheck.join(','),
-        start_time: data.start_time,
-        end_time: data.end_time,
-        token,
-      },
-      config,
-    ).then((res) => {
-      if(res.data.error === '') {
-        toasts.sucessNotification('Área comum adicionada com sucesso!')
-        saveModal()
-      }
-      else{
-        toasts.errorNotification(res.data.error)
-      }
-    })
+    await api
+      .post(
+        `/areas`,
+        {
+          title: data.title,
+          cover: data.cover[0],
+          allowed: allowed,
+          days: modalDaysCheck.join(','),
+          start_time: data.start_time,
+          end_time: data.end_time,
+          token,
+        },
+        config,
+      )
+      .then(res => {
+        if (res.data.error === '') {
+          toasts.sucessNotification('Área comum adicionada com sucesso!');
+          saveModal();
+        } else {
+          toasts.errorNotification(res.data.error);
+        }
+      });
   };
 
   const handleEditArea = async (data: FormSchema) => {
-    // await api.put('/area', {}, {});
+    await api
+      .post(
+        `/area/${ModalType?.id}`,
+        {
+          title: data.title,
+          cover: data.cover[0],
+          allowed: allowed,
+          days: modalDaysCheck.join(','),
+          start_time: data.start_time,
+          end_time: data.end_time,
+          token,
+        },
+        config,
+      )
+      .then(res => {
+        if (res.data.error === '') {
+          toasts.sucessNotification('Área comum editada com sucesso!');
+          saveModal();
+        } else {
+          toasts.errorNotification(res.data.error);
+        }
+      });
   };
 
   const deleteArea = async (id: number | undefined) => {
@@ -154,20 +168,29 @@ export const Areas = () => {
       })
       .then(res => {
         setAreas(res.data.list);
+        setDays(res.data.list);
       });
   }, []);
 
-  const ToggleModalDays = (item: any | undefined, value: any | undefined) => {
-    const days = [...modalDaysCheck];
+  const updateAllowed = async (id: number | undefined) => {
+    await api.put(`/area/${id}/allowed`, {
+      token: token,
+    });
+    getAreas();
+  };
+
+  const ToggleModalDays = (
+    item: string,
+    value: ChangeEvent<HTMLInputElement>,
+  ) => {
+    let days = [...modalDaysCheck];
 
     if (value.target.checked === false) {
-      days.filter(days => days !== item);
+      days = days.filter(days => days !== item);
     } else {
       days.push(item);
     }
-
-    console.log(days);
-
+    console.log(item);
     setModalDaysCheck(days);
   };
 
@@ -194,13 +217,19 @@ export const Areas = () => {
           {areas.map(_data => {
             return (
               <div key={_data.id}>
-                <CheckBox type="checkbox" checked={_data.allowed === 1} />
+                <CheckBox
+                  type="checkbox"
+                  onClick={() => updateAllowed(_data.id)}
+                  checked={_data.allowed === 1}
+                />
                 <p>{_data.title}</p>
 
                 <p>
                   <Cover src={_data.cover}></Cover>
                 </p>
                 <p>{_data.days}</p>
+
+                <br />
                 <p>{_data.start_time}</p>
                 <p>{_data.end_time}</p>
                 <ButtonsContent>
@@ -231,115 +260,121 @@ export const Areas = () => {
             );
           })}
         </AreaTable>
-       
+
         <ModalEdit>
-        <h3>{ModalType?.title} àrea comum</h3>
-       
+          <h3>{ModalType?.title} àrea comum</h3>
+
           <form onSubmit={handleSubmit(formSubmit)}>
             {ModalType?.title !== 'Excluir' && (
               <>
                 <label>Ativo</label>
-
-                <p>{errors.chekbox?.message}</p>
-                <input {...register('chekbox')} type={'checkbox'}  onChange={e => setAllowed(e.target.value ? 1 : 0)} />
+                <span>{errors.chekbox?.message}</span>
+                <input
+                  {...register('chekbox')}
+                  value={0}
+                  type={'checkbox'}
+                  onChange={e => setAllowed(e.target.value ? 1 : 0)}
+                />
                 <br />
-
-       
                 <br />
                 <label>Dias da semana</label>
-                <br />
-                <br />
+                <br /> <br />
                 <input
                   type="checkbox"
-                  value={0}
-                  checked={modalDaysCheck.includes('0')}
-                  onChange={value => ToggleModalDays('0', value)}
-                  defaultValue={0}
-                />
-
-                <label>segunda</label>
-
-                <input
-                  type="checkbox"
+                  value={1}
                   checked={modalDaysCheck.includes('1')}
-                  onChange={value => ToggleModalDays('1', value)}
-                  defaultValue={1}
+                  onChange={event => ToggleModalDays('1', event)}
                 />
-
-                <label>terça</label>
-
+                <label>segunda</label>
                 <input
                   type="checkbox"
                   checked={modalDaysCheck.includes('2')}
-                  onChange={value => ToggleModalDays('2', value)}
-                  defaultValue={2}
+                  value={2}
+                  onChange={event => ToggleModalDays('2', event)}
                 />
-
-                <label>quarta</label>
-
+                <label>terça</label>
                 <input
                   type="checkbox"
                   checked={modalDaysCheck.includes('3')}
-                  onChange={value => ToggleModalDays('3', value)}
-                  defaultValue={3}
+                  value={3}
+                  onChange={event => ToggleModalDays('3', event)}
                 />
-
-                <label>quinta</label>
-
+                <label>quarta</label>
                 <input
                   type="checkbox"
+                  value={4}
                   checked={modalDaysCheck.includes('4')}
-                  onChange={value => ToggleModalDays('4', value)}
-                  defaultValue={4}
+                  onChange={event => ToggleModalDays('4', event)}
                 />
-
-                <label>sexta</label>
-
+                <label>quinta</label>
                 <input
                   type="checkbox"
+                  value={5}
                   checked={modalDaysCheck.includes('5')}
                   onChange={value => ToggleModalDays('5', value)}
-                  defaultValue={5}
                 />
-
-                <label>sabado</label>
-
+                <label>sexta</label>
                 <input
                   type="checkbox"
+                  value={6}
                   checked={modalDaysCheck.includes('6')}
-                  onChange={value => ToggleModalDays('6', value)}
-                  defaultValue={5}
+                  onChange={event => ToggleModalDays('6', event)}
                 />
-
-                <label>domingo</label>
-
+                <label>sabado</label>
                 <input
                   type="checkbox"
+                  value={7}
                   checked={modalDaysCheck.includes('7')}
-                  onChange={value => ToggleModalDays('7', value)}
-                  defaultValue={5}
+                  onChange={event => ToggleModalDays('7', event)}
                 />
-                <br/>
-                <br/>
-
-                <label>Titulo</label>
-                <Input bg="" {...register('title')} name="title" />
-                <label>capa do local</label>
-                <p>{errors.cover?.message}</p>
+                <label>domingo</label>
+                {/* <input
+                  type="checkbox"
+                  value={8}
+                  checked={modalDaysCheck.includes('8')}
+                  onChange={value => ToggleModalDays('8', value)}
+                /> */}
+                <br />
+                <br />
+                {errors.title?.message ? (
+                  <p>{errors.title.message}</p>
+                ) : (
+                  <label>Titulo</label>
+                )}
+                <Input
+                  bg={errors.title?.message}
+                  {...register('title')}
+                  name="title"
+                />
+                {errors.cover?.message ? (
+                  <p>{errors.cover?.message}</p>
+                ) : (
+                  <label>Foto do local</label>
+                )}
                 <Input
                   {...register('cover')}
-                  bg=""
+                  bg={errors.cover?.message}
                   name="cover"
                   type={'file'}
-
                 />
-                <label>data de inicio</label>
-                <p>{errors.start_time?.message}</p>
-                <Input {...register('start_time')} bg="" />
-                <label>data de fim</label>
-                <p>{errors.end_time?.message}</p>
-                <Input {...register('end_time')} bg="" />
-
+                {errors.title?.message ? (
+                  <p>{errors.start_time?.message}</p>
+                ) : (
+                  <label>Hora de inicio</label>
+                )}
+                <Input
+                  {...register('start_time')}
+                  bg={errors.start_time?.message}
+                />
+                {errors.end_time?.message ? (
+                  <p>{errors.end_time?.message}</p>
+                ) : (
+                  <label>Hora de encerramento</label>
+                )}
+                <Input
+                  {...register('end_time')}
+                  bg={errors.end_time?.message}
+                />
                 <ModalArea>
                   {ModalType?.title === 'Nova' && (
                     <button
@@ -366,12 +401,14 @@ export const Areas = () => {
           </form>
           {ModalType?.title === 'Excluir' && (
             <>
-              <h2>Excluir área</h2>
+              <p>
+                Deseja realmente <b>EXCLUIR</b> esta área comum?
+              </p>
               <ModalArea>
                 <button onClick={() => deleteArea(ModalType.id)}>
                   Excluir
                 </button>
-                <button>Cancelar</button>
+                <button onClick={() => setIsOpen(false)}>Cancelar</button>
               </ModalArea>
             </>
           )}
