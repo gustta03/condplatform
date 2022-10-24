@@ -8,8 +8,9 @@ import { Pagination } from '../../components/Pagenation'
 import { Theme } from '../../components/SideBarTheme'
 import { AreaTable } from '../../components/TableArea'
 import { TableHead } from '../../components/TableHead'
+import { useCurrentPage } from '../../hooks/usePagination'
 import { api } from '../../services/api/api'
-import { Photo } from '../Ocorrencias/styles'
+import { Photo } from '../Occurrences/styles'
 import { Date, Unit, Where } from './styles'
 
 interface DataFoundAndLostType {
@@ -33,11 +34,8 @@ export const Achados = () => {
 
   const PageSize = 7
 
-  const [currentPage, setCurrentPage] = useState(5)
-
-  const firstPageIndex = (currentPage - 1) * PageSize
-  const lastPageIndex = firstPageIndex + PageSize
-  const currentItems = dataFoundAndLost.slice(firstPageIndex, lastPageIndex)
+  const { currentItems, currentPage, setCurrentPage } = useCurrentPage(dataFoundAndLost, PageSize)
+  
 
   const getFoundAndLost = async () => {
     await api

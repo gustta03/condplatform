@@ -11,7 +11,7 @@ import { Buttons } from '../../components/Buttons';
 import { ModalEdit } from '../../components/Modal';
 import { TableHead } from '../../components/TableHead';
 
-import { FileArrowUp } from 'phosphor-react';
+
 import { Root, Trigger } from '@radix-ui/react-dialog';
 
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -19,9 +19,10 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { toasts } from '../../utils/toast';
 
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { ButtonsArea } from '../Documentos/styles';
+
 import { Pagination } from '../../components/Pagenation';
 import { Loading } from '../../components/Loading/Loading';
+import { useCurrentPage } from '../../hooks/usePagination';
 
 export interface TypeData {
   body: string;
@@ -43,19 +44,15 @@ interface Input {
 
 export const Avisos = () => {
   const token = localStorage.getItem('@user:admin');
-  const [data, setData] = useState<TypeData[]>([]);
+  const [dataWarnings, setData] = useState<TypeData[]>([]);
   const [Modal, setModal] = useState<TypeDataModal>();
   const [isLoading, setIsLoading] = useState(false);
   const [StateModal, setStateModal] = useState(false);
 
   const PageSize = 6;
 
-  const [currentPage, setCurrentPage] = useState(1);
-
-  const firstPageIndex = (currentPage - 1) * PageSize;
-  const lastPageIndex = firstPageIndex + PageSize;
-  const currentItems = data.slice(firstPageIndex, lastPageIndex);
-
+  const { currentItems, currentPage, setCurrentPage } = useCurrentPage(dataWarnings, PageSize)
+  
   const [AddOrEdit, setAddOrEdit] = useState(false);
 
   const schema = yup.object().shape({
@@ -267,17 +264,17 @@ export const Avisos = () => {
 
           <Pagination
             currentPage={currentPage}
-            totalCount={data.length}
+            totalCount={dataWarnings.length}
             pageSize={PageSize}
-            onPageChange={(page: any) => setCurrentPage(page)}
+            onPageChange={(page: number) => setCurrentPage(page)}
           />
 
-          {data.length <= 0 && (
+          {/* {dataWarnings.length <= 0 && (
             <EmptyAlert>
               <FileArrowUp size={100} color="#a0a0a0" />
               <h4>Ops... Não há avisos cadastrados no sistema</h4>
             </EmptyAlert>
-          )}
+          )} */}
         </Loading>
       </Theme>
     </Root>

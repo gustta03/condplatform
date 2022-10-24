@@ -1,14 +1,14 @@
 import { Route, Routes } from 'react-router-dom';
-import { Avisos } from '../pages/Avisos';
+import { Avisos } from '../pages/Warnings';
 import { Dashboard } from '../pages/Dashboard';
-import { Documentos } from '../pages/Documentos';
+import { Documentos } from '../pages/Documents';
 import { LoginApp } from '../pages/Login';
 import { NotFound } from '../pages/NotFound';
-import { Reservas } from '../pages/Reservas';
-import { Ocorrencias } from '../pages/Ocorrencias';
-import { Achados } from '../pages/Achados';
-import { Usuarios } from '../pages/Usuarios';
-import { Areas } from '../pages/Areas';
+import { Reservas } from '../pages/Reservations';
+import { Ocorrencias } from '../pages/Occurrences';
+import { Achados } from '../pages/Founds';
+import { Usuarios } from '../pages/Users';
+import { Areas } from '../pages/CommonAreas';
 
 function Rotas() {
   return (

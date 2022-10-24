@@ -20,6 +20,7 @@ import { EmptyAlertIcon } from '../../components/EmptyCard'
 
 import { toasts } from '../../utils/toast'
 import { Pagination } from '../../components/Pagenation'
+import { useCurrentPage } from '../../hooks/usePagination'
 
 export interface TypeDataDocs {
   fileurl: string
@@ -55,18 +56,8 @@ export const Documentos = () => {
 
   const PageSize = 6
 
-  const [currentPage, setCurrentPage] = useState(1)
-
-  const firstPageIndex = (currentPage - 1) * PageSize
-  const lastPageIndex = firstPageIndex + PageSize
-
-  let currentItems = dataDocs.slice(firstPageIndex, lastPageIndex)
-
-  useEffect(() => {
-    currentItems = dataDocs.slice(firstPageIndex, lastPageIndex)
-    console.log(currentItems)
-  }, [dataDocs])
-
+  const { currentItems, currentPage, setCurrentPage } = useCurrentPage(dataDocs, PageSize)
+  
   const schema = yup.object().shape({
     title: yup.string().required('O nome do documento é obrigatorio'),
     file: yup.mixed().test('required', 'O arquivo é obrigatorio', _file => {

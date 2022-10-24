@@ -10,7 +10,7 @@ import { AreaTable } from '../../components/TableArea';
 import { TableHead } from '../../components/TableHead';
 import { api } from '../../services/api/api';
 import { toasts } from '../../utils/toast';
-import { ButtonsArea, ModalArea } from '../Documentos/styles';
+import { ButtonsArea, ModalArea } from '../Documents/styles';
 import { ButtonsContent, Input } from './styles';
 
 import { yupResolver } from '@hookform/resolvers/yup';

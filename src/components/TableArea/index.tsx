@@ -1,7 +1,7 @@
 import { TableContents, TableHeader, TableMain } from './styles'
 import { ReactNode, useState } from 'react'
 import { TableHead } from '../TableHead'
-import { TypeDataDocs } from '../../pages/Documentos'
+import { TypeDataDocs } from '../../pages/Documents'
 
 interface Children {
   children: ReactNode;

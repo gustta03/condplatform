@@ -1,5 +1,6 @@
-import { useMemo } from 'react';
-import { number } from 'yup/lib/locale';
+import { useMemo, useState } from 'react';
+import { TypeReservations } from '../pages/Reservations';
+
 
 interface Props {
   totalCount: number;
@@ -8,6 +9,8 @@ interface Props {
   currentPage: number;
   paginationRange?: string | number[] | undefined
 }
+
+
  
 export const DOTS = '...';
 
@@ -78,4 +81,27 @@ const usePagination = ({
   return paginationRange;
 };
 
-export { usePagination }
+const useCurrentPage = ( data: any[], PageSize: number) => {
+  
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const firstPageIndex = (currentPage - 1) * PageSize
+
+
+  const lastPageIndex = firstPageIndex + PageSize;
+  const currentItems = data.slice(firstPageIndex, lastPageIndex);
+
+  if(currentItems.length === 0) {
+    if(currentPage > 1) {
+      setCurrentPage(currentPage - 1)
+    }
+  }
+
+  return {
+    currentPage,
+    currentItems,
+    setCurrentPage
+  }
+}
+
+export { usePagination, useCurrentPage }

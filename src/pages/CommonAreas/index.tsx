@@ -8,8 +8,8 @@ import { AreaTable } from '../../components/TableArea';
 import { TableHead } from '../../components/TableHead';
 import { api } from '../../services/api/api';
 import { toasts } from '../../utils/toast';
-import { Input, ModalArea } from '../Documentos/styles';
-import { ButtonsContent } from '../Usuarios/styles';
+import { Input, ModalArea } from '../Documents/styles';
+import { ButtonsContent } from '../Users/styles';
 import { CheckBox, Cover, Days } from './styles';
 
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -49,7 +49,8 @@ export const Areas = () => {
   const [isAddOrEdit, setIsAddOrEdit] = useState(false);
   const [modalDaysCheck, setModalDaysCheck] = useState<string[]>([]);
   const [allowed, setAllowed] = useState<number>();
-  const [day, setDays] = useState<any>([]);
+  const [day, setDays] = useState<any[]>([]);
+  const [Df, setDf] = useState<any[]>([])
 
   const schema = yup.object().shape({
     chekbox: yup.boolean().required('O nome do documento é obrigatorio'),
@@ -167,6 +168,20 @@ export const Areas = () => {
         },
       })
       .then(res => {
+        res.data.list.map((item: any) => {
+          const daysWeek = ['segunda', 'terça', 'quarta', 'quinta',
+          'sexta', 'sabado', 'domingo']
+          const days = item.days.split(',')
+          const dFormated = []
+        
+          for(const i in days) {
+            if(days && daysWeek[days[i]]) {
+              dFormated.push(daysWeek[days[i]])
+            }
+          }
+          setDf(dFormated)
+          console.log(dFormated)
+        })
         setAreas(res.data.list);
         setDays(res.data.list);
       });
@@ -228,6 +243,14 @@ export const Areas = () => {
                   <Cover src={_data.cover}></Cover>
                 </p>
                 <p>{_data.days}</p>
+                 
+                 
+                <>
+                 {Df.map((item) => {
+                  console.log(item)
+                 })}
+                </>
+                 
 
                 <br />
                 <p>{_data.start_time}</p>
