@@ -1,8 +1,8 @@
 import styled from "styled-components";
 
 export const Overlay = styled.div`
-  width: 100%;
-  height: 300px;
+  width: 100vw;
+  height: 100vh;
   background-color: #000;
 `;
 
@@ -13,8 +13,8 @@ export const Content = styled.div`
   justify-content: center;
   align-items: center;
   top: 0;
-  width: 100%;
-  height: 100vh;
+  width: 100vw;
+  height: 110vh;
   background-color: rgba(0, 0, 0, 0.3);
   animation: fadeIn 300ms ease-out;
 
