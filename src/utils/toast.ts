@@ -3,7 +3,7 @@ import { toast, Renderable } from 'react-hot-toast'
 const toasts = {
   sucessNotification: (message: Renderable): void => {
     toast.success(message, {
-      position: 'top-right',
+      position: 'bottom-left',
       duration: 2000,
       style: {
         backgroundColor: 'green',
@@ -14,7 +14,7 @@ const toasts = {
 
   errorNotification: (messsage: Renderable): void => {
     toast.error(messsage, {
-      position: 'top-right',
+      position: 'bottom-left',
       duration: 2000,
       style: {
         backgroundColor: 'red',

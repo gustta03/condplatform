@@ -23,6 +23,7 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { Pagination } from '../../components/Pagenation';
 import { Loading } from '../../components/Loading/Loading';
 import { useCurrentPage } from '../../hooks/usePagination';
+import { FileArrowUp } from 'phosphor-react';
 
 export interface TypeData {
   body: string;
@@ -143,7 +144,7 @@ export const Avisos = () => {
   return (
     <Root open={StateModal}>
       <Theme>
-        <Loading open={isLoading}>
+     
           <p>Tela de avisos</p>
 
           <Trigger asChild>
@@ -269,13 +270,13 @@ export const Avisos = () => {
             onPageChange={(page: number) => setCurrentPage(page)}
           />
 
-          {/* {dataWarnings.length <= 0 && (
+          {dataWarnings.length <= 0 && (
             <EmptyAlert>
               <FileArrowUp size={100} color="#a0a0a0" />
               <h4>Ops... Não há avisos cadastrados no sistema</h4>
             </EmptyAlert>
-          )} */}
-        </Loading>
+          )}
+        
       </Theme>
     </Root>
   );

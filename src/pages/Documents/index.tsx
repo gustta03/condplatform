@@ -142,7 +142,7 @@ export const Documentos = () => {
       },
     }
     await api
-      .post(`/docs`, formData, config)
+      .post(`/docs`, formData, config )
       .then(res => res.data)
       .then(res => {
         if (res.error === '') {
@@ -240,9 +240,9 @@ export const Documentos = () => {
           {ModalInfo?.title === 'Deletar' && (
             <>
               <h3>Excluir documento</h3>
-              <p>
+              <div>
                 Deseja realmente <b>EXCLUIR</b> este documento?
-              </p>
+              </div>
               {ModalInfo?.title === 'Deletar' && (
                 <ModalArea>
                   <Trigger
