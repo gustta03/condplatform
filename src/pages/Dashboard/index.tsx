@@ -1,6 +1,5 @@
-import { useEffect } from 'react';
+
 import { Theme } from '../../components/SideBarTheme';
-import { TokenValidate } from '../../auth/auth';
 
 import { Cards } from './components/Cards';
 

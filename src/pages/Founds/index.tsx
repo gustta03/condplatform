@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react'
-import { Item } from 'react-photoswipe-gallery'
 
 import Lightbox from 'yet-another-react-lightbox'
 import 'yet-another-react-lightbox/styles.css'

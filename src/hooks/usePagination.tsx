@@ -1,5 +1,4 @@
 import { useMemo, useState } from 'react';
-import { TypeReservations } from '../pages/Reservations';
 
 
 interface Props {

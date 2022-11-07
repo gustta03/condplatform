@@ -1,7 +1,7 @@
 import * as Dialog from "@radix-ui/react-dialog";
 
 import { ReactNode } from "react";
-import { Content, EditArea, FormMain, ModalFormArea, Overlay, ButtonCloseArea, Hr } from './styles'
+import { Content, EditArea, FormMain, ModalFormArea, Overlay, ButtonCloseArea } from './styles'
 
 interface Children {
   children: ReactNode;

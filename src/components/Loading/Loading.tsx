@@ -1,4 +1,3 @@
-import { Overlay, Root } from '@radix-ui/react-dialog';
 import { ReactNode } from 'react';
 import { Load } from './styled';
 

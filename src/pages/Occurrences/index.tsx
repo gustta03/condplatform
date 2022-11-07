@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { AreaTable } from '../../components/TableArea'
 import { Theme } from '../../components/SideBarTheme'
 import { TableHead } from '../../components/TableHead'
@@ -7,8 +7,6 @@ import { Photo, Unit, Date, Checked } from './styles'
 import { Root } from '@radix-ui/react-dialog'
 
 import { Pagination } from '../../components/Pagenation'
-
-// import { LoadingRequest } from '../../components/Loading/Loading'
 
 import Lightbox from 'yet-another-react-lightbox'
 import 'yet-another-react-lightbox/styles.css'

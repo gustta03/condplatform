@@ -1,4 +1,4 @@
-import { FileArrowUp, FilePlus } from "phosphor-react";
+import { FilePlus } from "phosphor-react";
 import { EmptyAlert } from "./styles";
 
 interface Props {

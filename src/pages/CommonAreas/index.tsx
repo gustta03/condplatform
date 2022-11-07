@@ -10,7 +10,7 @@ import { api } from '../../services/api/api';
 import { toasts } from '../../utils/toast';
 import { Input, ModalArea } from '../Documents/styles';
 import { ButtonsContent } from '../Users/styles';
-import { CheckBox, Cover, Days } from './styles';
+import { CheckBox, Cover } from './styles';
 
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';

@@ -1,5 +1,4 @@
-import { Phone } from 'phosphor-react';
-import { bool, boolean } from 'yup';
+
 import { TableHeader } from './styles';
 
 interface Props {
@@ -20,6 +19,7 @@ interface Props {
   Capa?: boolean;
   inicio?: boolean;
   fim?: boolean;
+  owner?: boolean;
 }
 
 export const TableHead = ({
@@ -40,6 +40,7 @@ export const TableHead = ({
   funcionamento,
   inicio,
   fim,
+  owner
 }: Props) => {
   return (
     <TableHeader>
@@ -59,6 +60,7 @@ export const TableHead = ({
       {name ? <p>Nome</p> : null}
       {cpf ? <p>CPF</p> : null}
       {email ? <p>Email</p> : null}
+      {owner ? <p>Propietário</p> : null}
       {actions ? <p>Ações</p> : null}
     </TableHeader>
   );

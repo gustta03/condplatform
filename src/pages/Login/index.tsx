@@ -24,7 +24,7 @@ export const LoginApp = () => {
           navigate('/dashboard')
         }
       })
-  }, [email, password])
+  }, [email, navigate, password])
 
   return (
     <FormMain>
