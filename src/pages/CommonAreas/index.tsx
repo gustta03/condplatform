@@ -424,9 +424,9 @@ export const Areas = () => {
           </form>
           {ModalType?.title === 'Excluir' && (
             <>
-              <p>
+              <div>
                 Deseja realmente <b>EXCLUIR</b> esta área comum?
-              </p>
+              </div>
               <ModalArea>
                 <button onClick={() => deleteArea(ModalType.id)}>
                   Excluir

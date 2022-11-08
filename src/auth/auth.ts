@@ -8,6 +8,8 @@ const signOut = (): void => {
   return localStorage.removeItem('@user:admin');
 };
 
+// validando o token para possivel fazer requisoções
+
 const TokenValidate = async (): Promise<string> => {
   const token = localStorage.getItem('@user:admin');
   const req = await api.post('/auth/validate', { token });

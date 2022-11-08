@@ -1,6 +1,6 @@
-import { Toaster } from 'react-hot-toast'
-import Rotas from './routes/Routes'
-import GlobalStyle from './styles/global'
+import { Toaster } from 'react-hot-toast';
+import Rotas from './routes/Routes';
+import GlobalStyle from './styles/global';
 
 function App() {
   return (
@@ -12,4 +12,4 @@ function App() {
   );
 }
 
-export default App
+export default App;

@@ -1,25 +1,17 @@
 import { Theme } from '../../components/SideBarTheme';
 import * as yup from 'yup';
-
 import { ButtonModalArea, EmptyAlert, Input, ModalFormArea } from './styles';
 import { Button } from './styles';
-
 import { AreaTable } from '../../components/TableArea';
 import { useCallback, useEffect, useState } from 'react';
 import { api } from '../../services/api/api';
 import { Buttons } from '../../components/Buttons';
 import { ModalEdit } from '../../components/Modal';
 import { TableHead } from '../../components/TableHead';
-
-
 import { Root, Trigger } from '@radix-ui/react-dialog';
-
 import { yupResolver } from '@hookform/resolvers/yup';
-
 import { toasts } from '../../utils/toast';
-
 import { SubmitHandler, useForm } from 'react-hook-form';
-
 import { Pagination } from '../../components/Pagenation';
 import { Loading } from '../../components/Loading/Loading';
 import { useCurrentPage } from '../../hooks/usePagination';
@@ -160,7 +152,6 @@ export const Avisos = () => {
           </Trigger>
 
           <ModalEdit>
-            <div>....</div>
             <ModalFormArea>
               <form onSubmit={handleSubmit(onSubmit)}>
                 {Modal?.title != 'Deletar' && (
