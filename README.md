@@ -19,7 +19,7 @@ Plataforma web para gerenciamento de condomìnios voltada para os sindicos
 - Gestão de reservas
 - Gestão de ocorrencias
 - Gestão de achados e perdidos
-- Gestão de usários
+- Gestão de usuários
 - Gestão de unidades
 - Gestão de areas comuns
 
