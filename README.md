@@ -52,5 +52,8 @@ entre na pasta, instale as dependências e execute o server
 
 ```sh
 cd condplatorm
+
 npm i
+
+npm start
 ```
