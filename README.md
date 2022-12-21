@@ -39,21 +39,3 @@ tecnologias usadas para desenvolver este projeto
 - [yup] - construtor de esquemas para validação de campos e transformação de valores no JavaScript
 
 
-
-## Installation
-
-Para instalar o projeto é necessario ter o  [Node.js](https://nodejs.org/) instalado em sua máquina
-
-Clone o repositório
-```sh
-https://github.com/gustarpd/condplatform.git
-```
-entre na pasta, instale as dependências e execute o server
-
-```sh
-cd condplatorm
-
-npm i
-
-npm start
-```
