@@ -1,8 +1,6 @@
 ## condplatform
 Plataforma web para gerenciamento de condomìnios voltada para os sindicos
 
-<img src="https://github.com/gustarpd/condplatform/blob/main/.github/demosistema.gif" />
-
 ## screenshots 📸
 
 <img src="https://github.com/gustarpd/condplatform/blob/main/.github/avisos.png" />
@@ -25,7 +23,7 @@ Plataforma web para gerenciamento de condomìnios voltada para os sindicos
 
 ## Tech
 
-tecnologias usadas para desenvolver este projeto
+Ferramentas que usei para desenvolver este projeto
 
 - [ReactJS] -Lib aprimorado para aplicações web!!
 - [Styled-components] - biblioteca que possibilita escrever códigos CSS dentro do JavaScript
